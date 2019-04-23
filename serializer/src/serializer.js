@@ -1,5 +1,5 @@
-import ByteBuffer from 'bytebuffer';
-import EC from './error_with_cause';
+const ByteBuffer = require('bytebuffer');
+const EC = require('./error_with_cause');
 
 const HEX_DUMP = process.env.npm_config__graphene_serializer_hex_dump
 

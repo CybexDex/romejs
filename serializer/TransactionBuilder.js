@@ -266,7 +266,8 @@ export default class TransactionBuilder {
         if (this.tr_buffer) {
             throw new Error("already finalized");
         }
-        return (this.expiration = base_expiration_sec() + sec);
+        const _sec = sec? sec:1000;
+        return (this.expiration = Math.floor(Date.now() / 1000) + _sec);
     }
 
     /* Wraps this transaction in a proposal_create transaction */

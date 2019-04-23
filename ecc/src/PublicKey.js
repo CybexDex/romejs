@@ -1,12 +1,15 @@
-import BigInteger from 'bigi';
-import {Point, getCurveByName} from 'ecurve';
-const secp256k1 = getCurveByName('secp256k1');
-import {encode, decode}from 'bs58';
-import { sha256, sha512, ripemd160 } from './hash';
-import {ChainConfig} from 'cybexjs-ws';
-import assert from "assert";
-import deepEqual from "deep-equal";
+const {ChainConfig} = require('cybexjs-ws');
 
+const ecurve = require('ecurve');
+const {Point, getCurveByName} = require('ecurve');
+const BigInteger = require('bigi');
+const {encode, decode} = require('bs58');
+const { sha256, sha512, ripemd160 } = require('./hash');
+const PublicKey = require('./PublicKey');
+const deepEqual = require("deep-equal");
+const assert = require("assert");
+
+const secp256k1 = getCurveByName('secp256k1');
 const {G, n} = secp256k1;
 
 class PublicKey {

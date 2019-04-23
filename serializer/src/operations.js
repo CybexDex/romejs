@@ -1,5 +1,5 @@
-import types from "./types";
-import SerializerImpl from "./serializer";
+const types = require("./types");
+const SerializerImpl = require("./serializer");
 
 var {
     //id_type,

@@ -1,4 +1,4 @@
-import PublicKey from "../../ecc/src/PublicKey";
+const PublicKey = require("../../ecc/src/PublicKey");
 
 class FastParser {
 

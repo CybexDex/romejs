@@ -1,4 +1,4 @@
-import ByteBuffer from 'bytebuffer';
+const ByteBuffer = require('bytebuffer');
 
 export default function(type){
 

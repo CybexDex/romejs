@@ -1,11 +1,11 @@
-import ecurve from 'ecurve';
-import {Point, getCurveByName} from 'ecurve';
-import BigInteger from 'bigi';
-import {encode, decode} from 'bs58';
-import { sha256, sha512 } from './hash';
-import PublicKey from './PublicKey';
-import deepEqual from "deep-equal";
-import assert from "assert";
+const ecurve = require('ecurve');
+const {Point, getCurveByName} = require('ecurve');
+const BigInteger = require('bigi');
+const {encode, decode} = require('bs58');
+const { sha256, sha512 } = require('./hash');
+const PublicKey = require('./PublicKey');
+const deepEqual = require("deep-equal");
+const assert = require("assert");
 
 const secp256k1 = getCurveByName('secp256k1');
 const {G, n} = secp256k1;

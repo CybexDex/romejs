@@ -1,5 +1,5 @@
-import {Long} from 'bytebuffer';
-import ChainTypes from '../../chain/src/ChainTypes';
+const {Long} = require('bytebuffer');
+const ChainTypes = require('../../chain/src/ChainTypes');
 
 var MAX_SAFE_INT = 9007199254740991;
 var MIN_SAFE_INT =-9007199254740991;

@@ -1,10 +1,10 @@
-import Address from "./src/address";
-import Aes from "./src/aes";
-import PrivateKey from "./src/PrivateKey";
-import PublicKey from "./src/PublicKey";
-import Signature from "./src/signature";
-import brainKey from "./src/BrainKey";
-import * as hash from "./src/hash";
-import key from "./src/KeyUtils";
 
-export { Address, Aes, PrivateKey, PublicKey, Signature, brainKey, hash, key };
+const Aes = reuiqre("./src/aes");
+const PrivateKey = reuiqre("./src/PrivateKey");
+const PublicKey = reuiqre("./src/PublicKey");
+const Signature = reuiqre("./src/signature");
+const brainKey = reuiqre("./src/BrainKey");
+//const * as hash = reuiqre("./src/hash");
+const key = reuiqre("./src/KeyUtils");
+
+export { Aes, PrivateKey, PublicKey, Signature, brainKey, key };

@@ -1,10 +1,10 @@
 // https://code.google.com/p/crypto-js
-import AES from "crypto-js/aes";
-import encHex from "crypto-js/enc-hex";
-import encBase64 from "crypto-js/enc-base64";
-import assert from "assert";
-import {Long} from "bytebuffer";
-import { sha256, sha512 } from './hash';
+const AES = require("crypto-js/aes");
+const encHex = require("crypto-js/enc-hex");
+const encBase64 = require("crypto-js/enc-base64");
+const assert = require("assert");
+const {Long} = require("bytebuffer");
+const { sha256, sha512 } = require('./hash');
 
 /** Provides symetric encrypt and decrypt via AES. */
 class Aes {

@@ -1,7 +1,7 @@
-import assert from "assert"; // from https://github.com/bitcoinjs/bitcoinjs-lib
-import enforceType from './enforce_types';
+const assert = require("assert"); // from https://github.com/bitcoinjs/bitcoinjs-lib
+const enforceType = require('./enforce_types');
 
-import BigInteger from 'bigi';
+const BigInteger = require('bigi');
 
 function ECSignature(r, s) {
   enforceType(BigInteger, r)

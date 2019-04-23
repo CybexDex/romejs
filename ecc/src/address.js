@@ -1,8 +1,8 @@
-import assert from 'assert';
-import {ChainConfig} from 'cybexjs-ws';
-import { sha256, sha512, ripemd160} from './hash';
-import {encode, decode} from 'bs58';
-import deepEqual from "deep-equal";
+const assert = require('assert');
+const {ChainConfig} = require('cybexjs-ws');
+const {sha256, sha512, ripemd160} = require ('./hash');
+const {encode, decode} = require('bs58');
+const deepEqual = require("deep-equal");
 
 /** Addresses are shortened non-reversable hashes of a public key.  The full PublicKey is preferred.
     @deprecated

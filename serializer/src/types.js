@@ -1,15 +1,10 @@
-
-
 // Low-level types that make up operations
+const v = require('./SerializerValidation');
+const fp = require( './FastParser');
+const ChainTypes = require( "./ChainTypes");
+const ObjectId = require( "./ObjectId");
 
-import v from './SerializerValidation';
-import fp from './FastParser';
-
-import ChainTypes from "../../chain/src/ChainTypes";
-import ObjectId from "../../chain/src/ObjectId";
-
-import { PublicKey, Address } from "../../ecc";
-import { ChainConfig } from "cybexjs-ws";
+const PublicKey = require( "../../ecc/src/PublicKey");
 
 var Types = {};
 
@@ -786,7 +781,9 @@ Types.public_key = {
     },
     toObject(object, debug = {}){
         if (debug.use_default && object === undefined) {
-            return ChainConfig.address_prefix + "859gxfnXyUriMgUeThh1fWv3oqcpLFyHa3TfFYC4PK2HqhToVM";
+            // TODO
+            return "859gxfnXyUriMgUeThh1fWv3oqcpLFyHa3TfFYC4PK2HqhToVM"
+            // return ChainConfig.address_prefix + "859gxfnXyUriMgUeThh1fWv3oqcpLFyHa3TfFYC4PK2HqhToVM";
         }
         v.required(object);
         return object.toString()
@@ -796,32 +793,33 @@ Types.public_key = {
     }
 };
 
-Types.address =
-    {_to_address(object){
-        v.required(object);
-        if (object.addy) { return object; }
-        return Address.fromString(object);
-    },
-    fromByteBuffer(b){
-        return new Address(fp.ripemd160(b));
-    },
-    appendByteBuffer(b, object){
-        fp.ripemd160(b, Types.address._to_address(object).toBuffer());
-        return;
-    },
-    fromObject(object){
-        return Types.address._to_address(object);
-    },
-    toObject(object, debug = {}){
-        if (debug.use_default && object === undefined) {
-            return ChainConfig.address_prefix + "664KmHxSuQyDsfwo4WEJvWpzg1QKdg67S";
-        }
-        return Types.address._to_address(object).toString();
-    },
-    compare(a, b) {
-        return strCmp(a.toString(), b.toString())
-    }
-}
+// Types.address =
+//     {_to_address(object){
+//         v.required(object);
+//         if (object.addy) { return object; }
+//         return Address.fromString(object);
+//     },
+//     fromByteBuffer(b){
+//         return new Address(fp.ripemd160(b));
+//     },
+//     appendByteBuffer(b, object){
+//         fp.ripemd160(b, Types.address._to_address(object).toBuffer());
+//         return;
+//     },
+//     fromObject(object){
+//         return Types.address._to_address(object);
+//     },
+//     toObject(object, debug = {}){
+//         if (debug.use_default && object === undefined) {
+//             return "664KmHxSuQyDsfwo4WEJvWpzg1QKdg67S";
+//             // return ChainConfig.address_prefix + "664KmHxSuQyDsfwo4WEJvWpzg1QKdg67S";
+//         }
+//         return Types.address._to_address(object).toString();
+//     },
+//     compare(a, b) {
+//         return strCmp(a.toString(), b.toString())
+//     }
+// }
 
 let strCmp = (a, b) => a > b ? 1 : a < b ? -1 : 0
 let firstEl = el => Array.isArray(el) ? el[0] : el

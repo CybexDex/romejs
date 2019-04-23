@@ -108,7 +108,7 @@ function block_params(ref_block_id){
 
 // createNewOrderPayload(true, 10, 0.01, 'ETH/USDT', exexuteTranscation);
 
-async function test_sign(account, wifKey) {
+async function test_new_order(account, wifKey) {
     // let instanceRes = await Apis.instance("wss://hongkong.cybex.io", true).init_promise;
     const params = block_params("00b58424c5d6ea1b7db7b0bc98221b54b5084937");
     const pKey = PrivateKey.fromWif(wifKey);
@@ -132,19 +132,12 @@ async function test_sign(account, wifKey) {
         expiration: exp,
         fill_or_kill: false
     });
-    tr.expiration = exp;
+    tr.set_expire_seconds();
 
     const chain_id = "90be01e82b981c8f201c9a78a3d31f655743b29ff3274727b1439b093d04aa23"
-    tr.sign_with_key(chain_id, pKey);
+    const sig = tr.sign_with_key(chain_id, pKey);
 
-    // hexlify(hashlib.sha256(bytes(self)).digest()[:20]).decode("ascii")
-    // const _txid = hash.sha256(tr.tr_buffer).toString('hex').substring(0, 40);
-
-    if (tr.signatures){
-
-        // const _signedTx = SignedTransaction.toObject(tr);
-
-        const signedTx = {
+    const signedTx = {
             transactionType: "NewLimitOrder",
             transactionId: tr.id(),
             refBlockNum:params.ref_block_num,
@@ -155,15 +148,15 @@ async function test_sign(account, wifKey) {
             amountToSell: {"assetId":buy_sell.sell.asset_id,amount:buy_sell.sell.amount},
             minToReceive: {"assetId":buy_sell.receive.asset_id,amount:buy_sell.receive.amount},
             expiration: exp,
-            signature:_signedTx.signatures[0],
+            signature: sig,
             fill_or_kill:0,
             isBuy: 0
         };
-        console.log(signedTx);
+    console.log(signedTx);
 
-        const res = await exexuteTranscation(signedTx)
-        console.log(res);
-    }
+    // const res = await exexuteTranscation(signedTx)
+    // console.log(res);
+
 }
 
 async function test_cancel(account, wifKey, trxid) {
@@ -185,6 +178,7 @@ async function test_cancel(account, wifKey, trxid) {
             [6, {trx_id: trxid}]
         ]
     });
+    tr.set_expire_seconds();
 
     const chain_id = "90be01e82b981c8f201c9a78a3d31f655743b29ff3274727b1439b093d04aa23"
     tr.sign_with_key(chain_id, pKey);
@@ -233,6 +227,8 @@ async function test_cancel_all(account, wifKey, pair) {
         receive_asset_id: pair.base['id']
     });
 
+    tr.set_expire_seconds();
+
     const chain_id = "90be01e82b981c8f201c9a78a3d31f655743b29ff3274727b1439b093d04aa23"
     tr.sign_with_key(chain_id, pKey);
 
@@ -265,9 +261,11 @@ async function test_cancel_all(account, wifKey, pair) {
 
 // var offSet = new Date().getTimezoneOffset();
 // console.log(offSet);
+test_new_order("1.2.46197", "5KADTmswGdzfwQrmYwTG1mLUGsvRP1TzUkXfgJoJ1keqJw6SF6z");
+
 // test_cancel("1.2.46197", "5KADTmswGdzfwQrmYwTG1mLUGsvRP1TzUkXfgJoJ1keqJw6SF6z", "e2cd426aa27e9094c2c7567a982bc461665993f3");
 
-const res = test_cancel_all("1.2.46197","5KADTmswGdzfwQrmYwTG1mLUGsvRP1TzUkXfgJoJ1keqJw6SF6z",{"base":{"id":"1.3.0"},"quote":{"id":"1.3.0"}})
+//const res = test_cancel_all("1.2.46197","5KADTmswGdzfwQrmYwTG1mLUGsvRP1TzUkXfgJoJ1keqJw6SF6z",{"base":{"id":"1.3.0"},"quote":{"id":"1.3.0"}})
 
 
 

@@ -1,9 +1,9 @@
-import assert from 'assert'; // from github.com/bitcoinjs/bitcoinjs-lib from github.com/cryptocoinjs/ecdsa
-import {sha256, HmacSHA256,  } from './hash';
-import enforceType from './enforce_types';
+const assert = reuiqre('assert'); // from github.com/bitcoinjs/bitcoinjs-lib from github.com/cryptocoinjs/ecdsa
+const {sha256, HmacSHA256 } = reuiqre('./hash');
+const enforceType = reuiqre('./enforce_types');
 
-import BigInteger from 'bigi';
-import ECSignature from './ecsignature';
+const BigInteger = reuiqre('bigi');
+const ECSignature = reuiqre('./ecsignature');
 
 // https://tools.ietf.org/html/rfc6979#section-3.2
 function deterministicGenerateK(curve, hash, d, checkSig, nonce) {

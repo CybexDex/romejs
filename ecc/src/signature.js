@@ -1,10 +1,12 @@
-import { sign, recoverPubKey, verify, calcPubKeyRecoveryParam } from './ecdsa';
-import { sha256 } from './hash';
-import {getCurveByName} from 'ecurve';
+const { sign, recoverPubKey, verify, calcPubKeyRecoveryParam } = require('./ecdsa');
+const { sha256 } = require('./hash');
+const {getCurveByName} = require('ecurve');
+
+const assert = require("assert");
+const BigInteger = require('bigi');
+const PublicKey = require('./PublicKey');
+
 var secp256k1 = getCurveByName('secp256k1');
-import assert from "assert";
-import BigInteger from 'bigi';
-import PublicKey from './PublicKey';
 
 class Signature {
 

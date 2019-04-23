@@ -1,7 +1,7 @@
 var _my;
 
-import v from './SerializerValidation';
-import BigInteger from 'bigi';
+const v = require('./SerializerValidation');
+const BigInteger = require('bigi');
 
 // _internal is for low-level transaction code
 const _internal = {
