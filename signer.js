@@ -59,13 +59,13 @@ function limit_order_cancel(account, order_id) {
     console.log(JSON.stringify(signedTx));
 }
 
-function exexuteTranscation(body) {
-    var txId = body.transactionId;
-    console.log(txId);
+function exexuteTranscation(payload) {
+    var txId = payload.transactionId;
+    console.log("payload ===========================",payload);
     var options = {
         uri: 'https://api.cybex.io/v1/transaction',
         method: 'POST',
-        json: body
+        json: payload
     };
 
     request(options, function (error, response, body) {
@@ -94,14 +94,19 @@ function block_params(ref_block_id){
 
 // createNewOrderPayload(true, 10, 0.01, 'ETH/USDT', exexuteTranscation);
 
+function get_utc_eod(){
+    const end = new Date();
+    end.setHours(23,59,59,999);
+    return Math.floor(end / 1000)+1;
+}
+
 async function test_new_order(account, wifKey) {
     // let instanceRes = await Apis.instance("wss://hongkong.cybex.io", true).init_promise;
     const params = block_params("00b58424c5d6ea1b7db7b0bc98221b54b5084937");
     const pKey = PrivateKey.fromWif(wifKey);
     // var exp = Math.floor(Date.now() / 1000) + 9000;
-    const end = new Date();
-    end.setHours(23,59,59,999);
-    const exp = Math.floor(end / 1000)+1;
+
+    const exp = get_utc_eod();
     let tr = new TransactionBuilder();
 
     tr.ref_block_num = params.ref_block_num;
@@ -140,7 +145,7 @@ async function test_new_order(account, wifKey) {
             fill_or_kill:0,
             isBuy: 0
         };
-    console.log(signedTx);
+    // console.log(signedTx);
 
     const res = await exexuteTranscation(signedTx)
     console.log(res);
@@ -152,7 +157,7 @@ async function test_cancel(account, wifKey, trxid) {
     const params = block_params("00b58424c5d6ea1b7db7b0bc98221b54b5084937");
     const pKey = PrivateKey.fromWif(wifKey);
     // var exp = Math.floor(Date.now() / 1000) + 9000;
-    // const exp = 1555545599;
+
     var tr = new TransactionBuilder();
 
     tr.ref_block_num = params.ref_block_num;
@@ -166,15 +171,15 @@ async function test_cancel(account, wifKey, trxid) {
             [6, {trx_id: trxid}]
         ]
     });
-    tr.set_expire_seconds();
+    // tr.set_expire_seconds();
 
     const chain_id = "90be01e82b981c8f201c9a78a3d31f655743b29ff3274727b1439b093d04aa23"
-    tr.sign_with_key(chain_id, pKey);
-
+    // tr.sign_with_key(chain_id, pKey);
+    const sig = tr.sign_with_key(chain_id, pKey);
     // hexlify(hashlib.sha256(bytes(self)).digest()[:20]).decode("ascii")
     // const _txid = hash.sha256(tr.tr_buffer).toString('hex').substring(0, 40);
 
-    if (tr.signatures){
+    if (sig){
 
         // const _signedTx = SignedTransaction.toObject(tr);
 
@@ -184,16 +189,16 @@ async function test_cancel(account, wifKey, trxid) {
             originalTransactionId: trxid,
             refBlockNum:params.ref_block_num,
             refBlockPrefix:params.ref_block_prefix,
-            txExpiration:exp,
+            txExpiration:tr.expiration,
             orderId: '0',
             fee: { assetId: '1.3.0', amount: 5 },
-            seller: account,
-            signature:_signedTx.signatures[0],
+            feePayingAccount: account,
+            signature:sig,
         };
-        console.log(signedTx);
+        // console.log(signedTx);
 
         const res = await exexuteTranscation(signedTx)
-        console.log(res);
+        console.log("res+++++++",res);
     }
 }
 
@@ -215,10 +220,8 @@ async function test_cancel_all(account, wifKey, pair) {
         receive_asset_id: pair.base['id']
     });
 
-    tr.set_expire_seconds();
-
-    const chain_id = "90be01e82b981c8f201c9a78a3d31f655743b29ff3274727b1439b093d04aa23"
-    tr.sign_with_key(chain_id, pKey);
+    const chain_id = "90be01e82b981c8f201c9a78a3d31f655743b29ff3274727b1439b093d04aa23";
+    const sig = tr.sign_with_key(chain_id, pKey);
 
     // hexlify(hashlib.sha256(bytes(self)).digest()[:20]).decode("ascii")
     // const _txid = hash.sha256(tr.tr_buffer).toString('hex').substring(0, 40);
@@ -232,26 +235,28 @@ async function test_cancel_all(account, wifKey, pair) {
             transactionId: tr.id(),
             refBlockNum:params.ref_block_num,
             refBlockPrefix:params.ref_block_prefix,
-            txExpiration:exp,
+            txExpiration:tr.expiration,
             fee: { assetId: '1.3.0', amount: 50 },
             seller: account,
             sellAssetId: pair.quote['id'],
             recvAssetId: pair.base['id'],
-            signature:_signedTx.signatures[0],
+            signature:sig,
         };
         console.log(signedTx);
 
         const res = await exexuteTranscation(signedTx)
-        console.log(res);
+        console.log("result =================",res);
         return res;
     }
 }
 
 // var offSet = new Date().getTimezoneOffset();
 // console.log(offSet);
-test_new_order("1.2.46197", "5KADTmswGdzfwQrmYwTG1mLUGsvRP1TzUkXfgJoJ1keqJw6SF6z");
+//test_new_order("1.2.46197", "5KADTmswGdzfwQrmYwTG1mLUGsvRP1TzUkXfgJoJ1keqJw6SF6z");
 
-// test_cancel("1.2.46197", "5KADTmswGdzfwQrmYwTG1mLUGsvRP1TzUkXfgJoJ1keqJw6SF6z", "e2cd426aa27e9094c2c7567a982bc461665993f3");
+
+
+test_cancel("1.2.46197", "5KADTmswGdzfwQrmYwTG1mLUGsvRP1TzUkXfgJoJ1keqJw6SF6z", "5392007d976875bbf0ab375eaf8df51bb2a8219b");
 
 //const res = test_cancel_all("1.2.46197","5KADTmswGdzfwQrmYwTG1mLUGsvRP1TzUkXfgJoJ1keqJw6SF6z",{"base":{"id":"1.3.0"},"quote":{"id":"1.3.0"}})
 
