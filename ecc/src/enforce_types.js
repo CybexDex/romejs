@@ -1,4 +1,4 @@
-export default function enforce(type, value) { // Copied from https://github.com/bitcoinjs/bitcoinjs-lib
+function enforce(type, value) { // Copied from https://github.com/bitcoinjs/bitcoinjs-lib
   switch (type) {
     case 'Array': {
       if (Array.isArray(value)) return
@@ -38,3 +38,5 @@ function getName(fn) {
   var match = fn.toString().match(/function (.*?)\(/)
   return match ? match[1] : null
 }
+
+module.exports = enforce;

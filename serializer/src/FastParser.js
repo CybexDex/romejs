@@ -54,4 +54,5 @@ class FastParser {
     }
 }
 
-export default FastParser;
+// export default FastParser;
+module.exports = FastParser;

@@ -1,8 +1,6 @@
 const Long = require('bytebuffer');
 const v = require('./SerializerValidation');
 
-var DB_MAX_INSTANCE_ID = Long.fromNumber(((Math.pow(2,48))-1));
-
 class ObjectId {
 
     constructor(space,type,instance){
@@ -38,6 +36,7 @@ class ObjectId {
     }
 
     static fromLong(long){
+        var DB_MAX_INSTANCE_ID = Long.fromNumber(((Math.pow(2,48))-1));
         var space = long.shiftRight(56).toInt();
         var type = long.shiftRight(48).toInt() & 0x00ff;
         var instance = long.and(DB_MAX_INSTANCE_ID);
@@ -63,4 +62,5 @@ class ObjectId {
     }
 }
 
-export default ObjectId;
+// export default ObjectId;
+module.exports = ObjectId;

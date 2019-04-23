@@ -8,3 +8,4 @@ const brainKey = reuiqre("./src/BrainKey");
 const key = reuiqre("./src/KeyUtils");
 
 export { Aes, PrivateKey, PublicKey, Signature, brainKey, key };
+// exports.PublicKey = PublicKey

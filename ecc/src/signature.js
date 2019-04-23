@@ -151,4 +151,5 @@ class Signature {
 
 }
 
-export default Signature;
+// export default Signature;
+module.exports = Signature;

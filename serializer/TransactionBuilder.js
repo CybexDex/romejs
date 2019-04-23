@@ -1,11 +1,20 @@
-import {ops} from "./index";
-import {hash, PublicKey, Signature} from "../ecc";
+const hash = require("../ecc/src/hash");
+const PublicKey = require("../ecc/src/PublicKey");
+const Signature = require("../ecc/src/signature");
+const ops = require("./src/RomeOperations");
+// const {ops, transaction, signed_transaction} = require("./src/RomeOperations");
+const ChainTypes = require("./src/ChainTypes");
+const assert = require("assert");
 
-export default class TransactionBuilder {
+const expire_in_secs_proposal = 24 * 60 * 60;
+const review_in_secs_committee = 24 * 60 * 60;
+const committee_min_review = 24 * 60 * 60;
+
+class TransactionBuilder {
     constructor() {
         this.ref_block_num = 0;
         this.ref_block_prefix = 0;
-        this.expiration = 0;
+        this.expiration = Math.floor(Date.now() / 1000) + 3000;
         this.operations = [];
         this.signatures = [];
         this.signer_private_keys = [];
@@ -117,7 +126,7 @@ export default class TransactionBuilder {
     //                             op[1].finalize();
     //                         }
     //                     }
-    //                     this.tr_buffer = ops.transaction.toBuffer(this);
+    //                     this.tr_buffer = transaction.toBuffer(this);
     //                 })
     //         );
     //     });
@@ -150,99 +159,99 @@ export default class TransactionBuilder {
         return;
     }
 
-    // get_type_operation(name, operation) {
-    //     if (this.tr_buffer) {
-    //         throw new Error("already finalized");
-    //     }
-    //     assert(name, "name");
-    //     assert(operation, "operation");
-    //     var _type = ops[name];
-    //     assert(_type, `Unknown operation ${name}`);
-    //     var operation_id = ChainTypes.operations[_type.operation_name];
-    //     if (operation_id === undefined) {
-    //         throw new Error(`unknown operation: ${_type.operation_name}`);
-    //     }
-    //     if (!operation.fee) {
-    //         operation.fee = { amount: 0, asset_id: 0 };
-    //     }
-    //     if (name === "proposal_create") {
-    //         /*
-    //               * Proposals involving the committee account require a review
-    //               * period to be set, look for them here
-    //               */
-    //         let requiresReview = false,
-    //             extraReview = 0;
-    //         operation.proposed_ops.forEach(op => {
-    //             const COMMITTE_ACCOUNT = 0;
-    //             let key;
-    //
-    //             switch (op.op[0]) {
-    //                 case 0: // transfer
-    //                     key = "from";
-    //                     break;
-    //
-    //                 case 6: //account_update
-    //                 case 17: // asset_settle
-    //                     key = "account";
-    //                     break;
-    //
-    //                 case 10: // asset_create
-    //                 case 11: // asset_update
-    //                 case 12: // asset_update_bitasset
-    //                 case 13: // asset_update_feed_producers
-    //                 case 14: // asset_issue
-    //                 case 18: // asset_global_settle
-    //                 case 43: // asset_claim_fees
-    //                     key = "issuer";
-    //                     break;
-    //
-    //                 case 15: // asset_reserve
-    //                     key = "payer";
-    //                     break;
-    //
-    //                 case 16: // asset_fund_fee_pool
-    //                     key = "from_account";
-    //                     break;
-    //
-    //                 case 22: // proposal_create
-    //                 case 23: // proposal_update
-    //                 case 24: // proposal_delete
-    //                     key = "fee_paying_account";
-    //                     break;
-    //
-    //                 case 45: // initiate_crowdfund
-    //                     key = "owner";
-    //                     break;
-    //
-    //                 case 31: // committee_member_update_global_parameters
-    //                     requiresReview = true;
-    //                     extraReview = 60 * 60 * 24 * 13; // Make the review period 2 weeks total
-    //                     break;
-    //             }
-    //             if (key in op.op[1] && op.op[1][key] === COMMITTE_ACCOUNT) {
-    //                 requiresReview = true;
-    //             }
-    //         });
-    //         operation.expiration_time ||
-    //         (operation.expiration_time =
-    //             base_expiration_sec() + ChainConfig.expire_in_secs_proposal);
-    //         if (requiresReview) {
-    //             operation.review_period_seconds =
-    //                 extraReview +
-    //                 Math.max(
-    //                     committee_min_review,
-    //                     24 * 60 * 60 || ChainConfig.review_in_secs_committee
-    //                 );
-    //             /*
-    //                     * Expiration time must be at least equal to
-    //                     * now + review_period_seconds, so we add one hour to make sure
-    //                     */
-    //             operation.expiration_time += 60 * 60 + extraReview;
-    //         }
-    //     }
-    //     var operation_instance = _type.fromObject(operation);
-    //     return [operation_id, operation_instance];
-    // }
+    get_type_operation(name, operation) {
+        if (this.tr_buffer) {
+            throw new Error("already finalized");
+        }
+        assert(name, "name");
+        assert(operation, "operation");
+        var _type = ops[name];
+        assert(_type, `Unknown operation ${name}`);
+        var operation_id = ChainTypes.operations[_type.operation_name];
+        if (operation_id === undefined) {
+            throw new Error(`unknown operation: ${_type.operation_name}`);
+        }
+        if (!operation.fee) {
+            operation.fee = { amount: 0, asset_id: 0 };
+        }
+        if (name === "proposal_create") {
+            /*
+                  * Proposals involving the committee account require a review
+                  * period to be set, look for them here
+                  */
+            let requiresReview = false,
+                extraReview = 0;
+            operation.proposed_ops.forEach(op => {
+                const COMMITTE_ACCOUNT = 0;
+                let key;
+
+                switch (op.op[0]) {
+                    case 0: // transfer
+                        key = "from";
+                        break;
+
+                    case 6: //account_update
+                    case 17: // asset_settle
+                        key = "account";
+                        break;
+
+                    case 10: // asset_create
+                    case 11: // asset_update
+                    case 12: // asset_update_bitasset
+                    case 13: // asset_update_feed_producers
+                    case 14: // asset_issue
+                    case 18: // asset_global_settle
+                    case 43: // asset_claim_fees
+                        key = "issuer";
+                        break;
+
+                    case 15: // asset_reserve
+                        key = "payer";
+                        break;
+
+                    case 16: // asset_fund_fee_pool
+                        key = "from_account";
+                        break;
+
+                    case 22: // proposal_create
+                    case 23: // proposal_update
+                    case 24: // proposal_delete
+                        key = "fee_paying_account";
+                        break;
+
+                    case 45: // initiate_crowdfund
+                        key = "owner";
+                        break;
+
+                    case 31: // committee_member_update_global_parameters
+                        requiresReview = true;
+                        extraReview = 60 * 60 * 24 * 13; // Make the review period 2 weeks total
+                        break;
+                }
+                if (key in op.op[1] && op.op[1][key] === COMMITTE_ACCOUNT) {
+                    requiresReview = true;
+                }
+            });
+            operation.expiration_time ||
+            (operation.expiration_time =
+                Math.ceil(Date.now() / 1000) + expire_in_secs_proposal);
+            if (requiresReview) {
+                operation.review_period_seconds =
+                    extraReview +
+                    Math.max(
+                        committee_min_review,
+                        24 * 60 * 60 || review_in_secs_committee
+                    );
+                /*
+                        * Expiration time must be at least equal to
+                        * now + review_period_seconds, so we add one hour to make sure
+                        */
+                operation.expiration_time += 60 * 60 + extraReview;
+            }
+        }
+        var operation_instance = _type.fromObject(operation);
+        return [operation_id, operation_instance];
+    }
 
     /* optional: fetch the current head block */
 
@@ -261,13 +270,13 @@ export default class TransactionBuilder {
     //     });
     // }
 
-    /** optional: there is a deafult expiration */
+    // /** optional: there is a deafult expiration */
     set_expire_seconds(sec) {
         if (this.tr_buffer) {
             throw new Error("already finalized");
         }
         const _sec = sec? sec:1000;
-        return (this.expiration = Math.floor(Date.now() / 1000) + _sec);
+        return (this.expiration = Math.floor(Date.now() / 1000) + _sec );
     }
 
     /* Wraps this transaction in a proposal_create transaction */
@@ -489,7 +498,7 @@ export default class TransactionBuilder {
         for (var i = 0; 0 < end ? i < end : i > end; 0 < end ? i++ : i++) {
             var [private_key, public_key] = this.signer_private_keys[i];
             var sig = Signature.signBuffer(
-                Buffer.concat([new Buffer(chain_id, "hex"), this.tr_buffer]),
+                Buffer.concat([new Buffer.from(chain_id, "hex"), this.tr_buffer]),
                 private_key,
                 public_key
             );
@@ -500,12 +509,15 @@ export default class TransactionBuilder {
         return;
     }
 
-    sign_with_key(chain_id, private_key){
+    sign_with_key(chain_id, private_key, public_key = private_key.toPublicKey()){
         if (!this.tr_buffer) {
             this.tr_buffer = ops.transaction.toBuffer(this);
         }
         if (this.signed) {
             throw new Error("already signed");
+        }
+        if (!public_key.Q) {
+            public_key = PublicKey.fromPublicKeyString(public_key);
         }
 
         const sig = Signature.signBuffer(
@@ -535,3 +547,5 @@ export default class TransactionBuilder {
     //     }
     // }
 }
+
+module.exports = TransactionBuilder;

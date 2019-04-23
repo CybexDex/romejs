@@ -10,7 +10,6 @@ var Types = {};
 
 const HEX_DUMP = process.env.npm_config__graphene_serializer_hex_dump
 
-
 Types.uint8 = {
 
     fromByteBuffer(b){
@@ -833,4 +832,5 @@ let sortOperation = (array, st_operation) =>
         strCmp(firstEl(a).toString(), firstEl(b).toString())
     )
 
-export default Types;
+// export default Types;
+module.exports = Types;

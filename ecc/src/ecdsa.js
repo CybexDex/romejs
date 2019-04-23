@@ -1,9 +1,9 @@
-const assert = reuiqre('assert'); // from github.com/bitcoinjs/bitcoinjs-lib from github.com/cryptocoinjs/ecdsa
-const {sha256, HmacSHA256 } = reuiqre('./hash');
-const enforceType = reuiqre('./enforce_types');
+const assert = require('assert'); // from github.com/bitcoinjs/bitcoinjs-lib from github.com/cryptocoinjs/ecdsa
+const {sha256, HmacSHA256 } = require('./hash');
+const enforceType = require('./enforce_types');
 
-const BigInteger = reuiqre('bigi');
-const ECSignature = reuiqre('./ecsignature');
+const BigInteger = require('bigi');
+const ECSignature = require('./ecsignature');
 
 // https://tools.ietf.org/html/rfc6979#section-3.2
 function deterministicGenerateK(curve, hash, d, checkSig, nonce) {
@@ -208,5 +208,10 @@ function calcPubKeyRecoveryParam(curve, e, signature, Q) {
   throw new Error('Unable to find valid recovery factor')
 }
 
-export { calcPubKeyRecoveryParam, deterministicGenerateK, recoverPubKey, sign,
-  verify, verifyRaw };
+// export { calcPubKeyRecoveryParam, deterministicGenerateK, recoverPubKey, sign, verify, verifyRaw };
+exports.calcPubKeyRecoveryParam = calcPubKeyRecoveryParam;
+exports.deterministicGenerateK = deterministicGenerateK;
+exports.recoverPubKey = recoverPubKey;
+exports.sign = sign;
+exports.verify = verify;
+exports.verifyRaw = verifyRaw;

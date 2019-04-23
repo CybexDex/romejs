@@ -1,21 +1,7 @@
-
-// import TransactionBuilder from 'chain/src/TransactionBuilder';
-// import PrivateKey from "ecc/src/PrivateKey";
-// import transaction  from "serializer/src/operations";
-// import SignedTransaction from "serializer/src/operations"
-
 const request = require('request');
 // const { Apis } = require("cybexjs-ws");
-
-// const Transaction = require('./serializer/src/operations').transaction;
-// const SignedTransaction = require('./serializer/src/operations').signed_transaction;
 const PrivateKey = require('./ecc/src/PrivateKey');
 const TransactionBuilder = require('./serializer/TransactionBuilder');
-
-function toEpochUTCSec(dateTimeStr) {
-    var epoch = new Date(dateTimeStr);
-    return epoch.getTime() / 1000 - (epoch.getTimezoneOffset() * 60);
-}
 
 function limit_order_create(account, wifKey) {
     var exp = Math.floor(Date.now() / 1000) + 1000;
@@ -113,8 +99,10 @@ async function test_new_order(account, wifKey) {
     const params = block_params("00b58424c5d6ea1b7db7b0bc98221b54b5084937");
     const pKey = PrivateKey.fromWif(wifKey);
     // var exp = Math.floor(Date.now() / 1000) + 9000;
-    const exp = 1555545599;
-    var tr = new TransactionBuilder();
+    const end = new Date();
+    end.setHours(23,59,59,999);
+    const exp = Math.floor(end / 1000)+1;
+    let tr = new TransactionBuilder();
 
     tr.ref_block_num = params.ref_block_num;
     tr.ref_block_prefix = params.ref_block_prefix;
@@ -132,7 +120,7 @@ async function test_new_order(account, wifKey) {
         expiration: exp,
         fill_or_kill: false
     });
-    tr.set_expire_seconds();
+    // tr.set_expire_seconds();
 
     const chain_id = "90be01e82b981c8f201c9a78a3d31f655743b29ff3274727b1439b093d04aa23"
     const sig = tr.sign_with_key(chain_id, pKey);
@@ -142,7 +130,7 @@ async function test_new_order(account, wifKey) {
             transactionId: tr.id(),
             refBlockNum:params.ref_block_num,
             refBlockPrefix:params.ref_block_prefix,
-            txExpiration:exp,
+            txExpiration:tr.expiration,
             fee: { assetId: '1.3.0', amount: 55 },
             seller: account,
             amountToSell: {"assetId":buy_sell.sell.asset_id,amount:buy_sell.sell.amount},
@@ -154,8 +142,8 @@ async function test_new_order(account, wifKey) {
         };
     console.log(signedTx);
 
-    // const res = await exexuteTranscation(signedTx)
-    // console.log(res);
+    const res = await exexuteTranscation(signedTx)
+    console.log(res);
 
 }
 

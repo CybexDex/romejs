@@ -45,16 +45,16 @@ public_key = new Serializer(
 // operations is not avialble until the very end of the generated code.
 // See: operation.st_operations = ...
 var operation = static_variant();
-// module.exports["operation"] = operation;
 
-export {operation};
+
+// export {operation};
 // For module.exports
 var Serializer = function (operation_name, serilization_types_object) {
     return new SerializerImpl(operation_name, serilization_types_object);
     // return module.exports[operation_name] = s;
 };
 
-export var void_ext = new Serializer("void_ext");
+var void_ext = new Serializer("void_ext");
 
 var cybex_ext_vesting = new Serializer("cybex_ext_vesting", {
     vesting_period: uint64,
@@ -102,7 +102,7 @@ var future_extensions = static_variant([
 // ##  Generated code follows
 // # programs/js_operation_serializer > npm i -g decaffeinate
 // ## -------------------------------
-export const transfer_operation_fee_parameters = new Serializer(
+const transfer_operation_fee_parameters = new Serializer(
     "transfer_operation_fee_parameters",
     {
         fee: uint64,
@@ -110,32 +110,32 @@ export const transfer_operation_fee_parameters = new Serializer(
     }
 );
 
-export const limit_order_create_operation_fee_parameters = new Serializer(
+const limit_order_create_operation_fee_parameters = new Serializer(
     "limit_order_create_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const limit_order_cancel_operation_fee_parameters = new Serializer(
+const limit_order_cancel_operation_fee_parameters = new Serializer(
     "limit_order_cancel_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const call_order_update_operation_fee_parameters = new Serializer(
+const call_order_update_operation_fee_parameters = new Serializer(
     "call_order_update_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const fill_order_operation_fee_parameters = new Serializer(
+const fill_order_operation_fee_parameters = new Serializer(
     "fill_order_operation_fee_parameters"
 );
 
-export const account_create_operation_fee_parameters = new Serializer(
+const account_create_operation_fee_parameters = new Serializer(
     "account_create_operation_fee_parameters",
     {
         basic_fee: uint64,
@@ -144,7 +144,7 @@ export const account_create_operation_fee_parameters = new Serializer(
     }
 );
 
-export const account_update_operation_fee_parameters = new Serializer(
+const account_update_operation_fee_parameters = new Serializer(
     "account_update_operation_fee_parameters",
     {
         fee: int64,
@@ -152,14 +152,14 @@ export const account_update_operation_fee_parameters = new Serializer(
     }
 );
 
-export const account_whitelist_operation_fee_parameters = new Serializer(
+const account_whitelist_operation_fee_parameters = new Serializer(
     "account_whitelist_operation_fee_parameters",
     {
         fee: int64
     }
 );
 
-export const account_upgrade_operation_fee_parameters = new Serializer(
+const account_upgrade_operation_fee_parameters = new Serializer(
     "account_upgrade_operation_fee_parameters",
     {
         membership_annual_fee: uint64,
@@ -167,14 +167,14 @@ export const account_upgrade_operation_fee_parameters = new Serializer(
     }
 );
 
-export const account_transfer_operation_fee_parameters = new Serializer(
+const account_transfer_operation_fee_parameters = new Serializer(
     "account_transfer_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const asset_create_operation_fee_parameters = new Serializer(
+const asset_create_operation_fee_parameters = new Serializer(
     "asset_create_operation_fee_parameters",
     {
         symbol3: uint64,
@@ -184,7 +184,7 @@ export const asset_create_operation_fee_parameters = new Serializer(
     }
 );
 
-export const asset_update_operation_fee_parameters = new Serializer(
+const asset_update_operation_fee_parameters = new Serializer(
     "asset_update_operation_fee_parameters",
     {
         fee: uint64,
@@ -192,42 +192,42 @@ export const asset_update_operation_fee_parameters = new Serializer(
     }
 );
 
-export const asset_update_bitasset_operation_fee_parameters = new Serializer(
+const asset_update_bitasset_operation_fee_parameters = new Serializer(
     "asset_update_bitasset_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const asset_update_feed_producers_operation_fee_parameters = new Serializer(
+const asset_update_feed_producers_operation_fee_parameters = new Serializer(
     "asset_update_feed_producers_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const asset_issue_operation_fee_parameters = new Serializer(
+const asset_issue_operation_fee_parameters = new Serializer(
     "asset_issue_operation_fee_parameters",
     {
         fee: uint64,
         price_per_kbyte: uint32
     }
 );
-export const initiate_crowdfund_operation_fee_parameters = new Serializer(
+const initiate_crowdfund_operation_fee_parameters = new Serializer(
     "initiate_crowdfund_operation_fee_parameters",
     {
         fee: uint64,
         price_per_kbyte: uint32
     }
 );
-export const participate_crowdfund_operation_fee_parameters = new Serializer(
+const participate_crowdfund_operation_fee_parameters = new Serializer(
     "participate_crowdfund_operation_fee_parameters",
     {
         fee: uint64,
         price_per_kbyte: uint32
     }
 );
-export const withdraw_crowdfund_operation_fee_parameters = new Serializer(
+const withdraw_crowdfund_operation_fee_parameters = new Serializer(
     "withdraw_crowdfund_operation_fee_parameters",
     {
         fee: uint64,
@@ -235,56 +235,56 @@ export const withdraw_crowdfund_operation_fee_parameters = new Serializer(
     }
 );
 
-export const asset_reserve_operation_fee_parameters = new Serializer(
+const asset_reserve_operation_fee_parameters = new Serializer(
     "asset_reserve_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const asset_fund_fee_pool_operation_fee_parameters = new Serializer(
+const asset_fund_fee_pool_operation_fee_parameters = new Serializer(
     "asset_fund_fee_pool_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const asset_settle_operation_fee_parameters = new Serializer(
+const asset_settle_operation_fee_parameters = new Serializer(
     "asset_settle_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const asset_global_settle_operation_fee_parameters = new Serializer(
+const asset_global_settle_operation_fee_parameters = new Serializer(
     "asset_global_settle_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const asset_publish_feed_operation_fee_parameters = new Serializer(
+const asset_publish_feed_operation_fee_parameters = new Serializer(
     "asset_publish_feed_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const witness_create_operation_fee_parameters = new Serializer(
+const witness_create_operation_fee_parameters = new Serializer(
     "witness_create_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const witness_update_operation_fee_parameters = new Serializer(
+const witness_update_operation_fee_parameters = new Serializer(
     "witness_update_operation_fee_parameters",
     {
         fee: int64
     }
 );
 
-export const proposal_create_operation_fee_parameters = new Serializer(
+const proposal_create_operation_fee_parameters = new Serializer(
     "proposal_create_operation_fee_parameters",
     {
         fee: uint64,
@@ -292,7 +292,7 @@ export const proposal_create_operation_fee_parameters = new Serializer(
     }
 );
 
-export const proposal_update_operation_fee_parameters = new Serializer(
+const proposal_update_operation_fee_parameters = new Serializer(
     "proposal_update_operation_fee_parameters",
     {
         fee: uint64,
@@ -300,28 +300,28 @@ export const proposal_update_operation_fee_parameters = new Serializer(
     }
 );
 
-export const proposal_delete_operation_fee_parameters = new Serializer(
+const proposal_delete_operation_fee_parameters = new Serializer(
     "proposal_delete_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const withdraw_permission_create_operation_fee_parameters = new Serializer(
+const withdraw_permission_create_operation_fee_parameters = new Serializer(
     "withdraw_permission_create_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const withdraw_permission_update_operation_fee_parameters = new Serializer(
+const withdraw_permission_update_operation_fee_parameters = new Serializer(
     "withdraw_permission_update_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const withdraw_permission_claim_operation_fee_parameters = new Serializer(
+const withdraw_permission_claim_operation_fee_parameters = new Serializer(
     "withdraw_permission_claim_operation_fee_parameters",
     {
         fee: uint64,
@@ -329,56 +329,56 @@ export const withdraw_permission_claim_operation_fee_parameters = new Serializer
     }
 );
 
-export const withdraw_permission_delete_operation_fee_parameters = new Serializer(
+const withdraw_permission_delete_operation_fee_parameters = new Serializer(
     "withdraw_permission_delete_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const committee_member_create_operation_fee_parameters = new Serializer(
+const committee_member_create_operation_fee_parameters = new Serializer(
     "committee_member_create_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const committee_member_update_operation_fee_parameters = new Serializer(
+const committee_member_update_operation_fee_parameters = new Serializer(
     "committee_member_update_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const committee_member_update_global_parameters_operation_fee_parameters = new Serializer(
+const committee_member_update_global_parameters_operation_fee_parameters = new Serializer(
     "committee_member_update_global_parameters_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const vesting_balance_create_operation_fee_parameters = new Serializer(
+const vesting_balance_create_operation_fee_parameters = new Serializer(
     "vesting_balance_create_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const vesting_balance_withdraw_operation_fee_parameters = new Serializer(
+const vesting_balance_withdraw_operation_fee_parameters = new Serializer(
     "vesting_balance_withdraw_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const worker_create_operation_fee_parameters = new Serializer(
+const worker_create_operation_fee_parameters = new Serializer(
     "worker_create_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const custom_operation_fee_parameters = new Serializer(
+const custom_operation_fee_parameters = new Serializer(
     "custom_operation_fee_parameters",
     {
         fee: uint64,
@@ -386,18 +386,18 @@ export const custom_operation_fee_parameters = new Serializer(
     }
 );
 
-export const assert_operation_fee_parameters = new Serializer(
+const assert_operation_fee_parameters = new Serializer(
     "assert_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const balance_claim_operation_fee_parameters = new Serializer(
+const balance_claim_operation_fee_parameters = new Serializer(
     "balance_claim_operation_fee_parameters"
 );
 
-export const override_transfer_operation_fee_parameters = new Serializer(
+const override_transfer_operation_fee_parameters = new Serializer(
     "override_transfer_operation_fee_parameters",
     {
         fee: uint64,
@@ -405,7 +405,7 @@ export const override_transfer_operation_fee_parameters = new Serializer(
     }
 );
 
-export const transfer_to_blind_operation_fee_parameters = new Serializer(
+const transfer_to_blind_operation_fee_parameters = new Serializer(
     "transfer_to_blind_operation_fee_parameters",
     {
         fee: uint64,
@@ -413,7 +413,7 @@ export const transfer_to_blind_operation_fee_parameters = new Serializer(
     }
 );
 
-export const blind_transfer_operation_fee_parameters = new Serializer(
+const blind_transfer_operation_fee_parameters = new Serializer(
     "blind_transfer_operation_fee_parameters",
     {
         fee: uint64,
@@ -421,18 +421,18 @@ export const blind_transfer_operation_fee_parameters = new Serializer(
     }
 );
 
-export const transfer_from_blind_operation_fee_parameters = new Serializer(
+const transfer_from_blind_operation_fee_parameters = new Serializer(
     "transfer_from_blind_operation_fee_parameters",
     {
         fee: uint64
     }
 );
 
-export const asset_settle_cancel_operation_fee_parameters = new Serializer(
+const asset_settle_cancel_operation_fee_parameters = new Serializer(
     "asset_settle_cancel_operation_fee_parameters"
 );
 
-export const asset_claim_fees_operation_fee_parameters = new Serializer(
+const asset_claim_fees_operation_fee_parameters = new Serializer(
     "asset_claim_fees_operation_fee_parameters",
     {
         fee: uint64
@@ -490,21 +490,21 @@ var fee_parameters = static_variant([
     withdraw_crowdfund_operation_fee_parameters
 ]);
 
-export const fee_schedule = new Serializer("fee_schedule", {
+const fee_schedule = new Serializer("fee_schedule", {
     parameters: set(fee_parameters),
     scale: uint32
 });
 
-export const void_result = new Serializer("void_result");
+const void_result = new Serializer("void_result");
 
-export const asset = new Serializer("asset", {
+const asset = new Serializer("asset", {
     amount: int64,
     asset_id: protocol_id_type("asset")
 });
 
 var operation_result = static_variant([void_result, object_id_type, asset]);
 
-export const processed_transaction = new Serializer("processed_transaction", {
+const processed_transaction = new Serializer("processed_transaction", {
     ref_block_num: uint16,
     ref_block_prefix: uint32,
     expiration: time_point_sec,
@@ -514,7 +514,7 @@ export const processed_transaction = new Serializer("processed_transaction", {
     operation_results: array(operation_result)
 });
 
-export const signed_block = new Serializer("signed_block", {
+const signed_block = new Serializer("signed_block", {
     previous: bytes(20),
     timestamp: time_point_sec,
     witness: protocol_id_type("witness"),
@@ -524,7 +524,7 @@ export const signed_block = new Serializer("signed_block", {
     transactions: array(processed_transaction)
 });
 
-export const block_header = new Serializer("block_header", {
+const block_header = new Serializer("block_header", {
     previous: bytes(20),
     timestamp: time_point_sec,
     witness: protocol_id_type("witness"),
@@ -532,7 +532,7 @@ export const block_header = new Serializer("block_header", {
     extensions: set(future_extensions)
 });
 
-export const signed_block_header = new Serializer("signed_block_header", {
+const signed_block_header = new Serializer("signed_block_header", {
     previous: bytes(20),
     timestamp: time_point_sec,
     witness: protocol_id_type("witness"),
@@ -541,14 +541,14 @@ export const signed_block_header = new Serializer("signed_block_header", {
     witness_signature: bytes(65)
 });
 
-export const memo_data = new Serializer("memo_data", {
+const memo_data = new Serializer("memo_data", {
     from: public_key,
     to: public_key,
     nonce: uint64,
     message: bytes()
 });
 
-export const transfer = new Serializer("transfer", {
+const transfer = new Serializer("transfer", {
     fee: asset,
     from: protocol_id_type("account"),
     to: protocol_id_type("account"),
@@ -557,7 +557,7 @@ export const transfer = new Serializer("transfer", {
     extensions: set(future_extensions)
 });
 
-export const limit_order_create = new Serializer("limit_order_create", {
+const limit_order_create = new Serializer("limit_order_create", {
     fee: asset,
     seller: protocol_id_type("account"),
     amount_to_sell: asset,
@@ -567,14 +567,18 @@ export const limit_order_create = new Serializer("limit_order_create", {
     extensions: set(future_extensions)
 });
 
-export const limit_order_cancel = new Serializer("limit_order_cancel", {
+exports.limit_order_create = limit_order_create;
+
+const limit_order_cancel = new Serializer("limit_order_cancel", {
     fee: asset,
     fee_paying_account: protocol_id_type("account"),
     order: protocol_id_type("limit_order"),
     extensions: set(future_extensions)
 });
 
-export const call_order_update = new Serializer("call_order_update", {
+exports.limit_order_cancel = limit_order_cancel;
+
+const call_order_update = new Serializer("call_order_update", {
     fee: asset,
     funding_account: protocol_id_type("account"),
     delta_collateral: asset,
@@ -582,7 +586,7 @@ export const call_order_update = new Serializer("call_order_update", {
     extensions: set(future_extensions)
 });
 
-export const fill_order = new Serializer("fill_order", {
+const fill_order = new Serializer("fill_order", {
     fee: asset,
     order_id: object_id_type,
     account_id: protocol_id_type("account"),
@@ -590,14 +594,14 @@ export const fill_order = new Serializer("fill_order", {
     receives: asset
 });
 
-export const authority = new Serializer("authority", {
+const authority = new Serializer("authority", {
     weight_threshold: uint32,
     account_auths: map(protocol_id_type("account"), uint16),
     key_auths: map(public_key, uint16),
     address_auths: map(address, uint16)
 });
 
-export const account_options = new Serializer("account_options", {
+const account_options = new Serializer("account_options", {
     memo_key: public_key,
     voting_account: protocol_id_type("account"),
     num_witness: uint16,
@@ -606,7 +610,7 @@ export const account_options = new Serializer("account_options", {
     extensions: set(future_extensions)
 });
 
-export const account_create = new Serializer("account_create", {
+const account_create = new Serializer("account_create", {
     fee: asset,
     registrar: protocol_id_type("account"),
     referrer: protocol_id_type("account"),
@@ -618,7 +622,7 @@ export const account_create = new Serializer("account_create", {
     extensions: set(future_extensions)
 });
 
-export const account_update = new Serializer("account_update", {
+const account_update = new Serializer("account_update", {
     fee: asset,
     account: protocol_id_type("account"),
     owner: optional(authority),
@@ -627,7 +631,7 @@ export const account_update = new Serializer("account_update", {
     extensions: set(future_extensions)
 });
 
-export const account_whitelist = new Serializer("account_whitelist", {
+const account_whitelist = new Serializer("account_whitelist", {
     fee: asset,
     authorizing_account: protocol_id_type("account"),
     account_to_list: protocol_id_type("account"),
@@ -635,26 +639,26 @@ export const account_whitelist = new Serializer("account_whitelist", {
     extensions: set(future_extensions)
 });
 
-export const account_upgrade = new Serializer("account_upgrade", {
+const account_upgrade = new Serializer("account_upgrade", {
     fee: asset,
     account_to_upgrade: protocol_id_type("account"),
     upgrade_to_lifetime_member: bool,
     extensions: set(future_extensions)
 });
 
-export const account_transfer = new Serializer("account_transfer", {
+const account_transfer = new Serializer("account_transfer", {
     fee: asset,
     account_id: protocol_id_type("account"),
     new_owner: protocol_id_type("account"),
     extensions: set(future_extensions)
 });
 
-export const price = new Serializer("price", {
+const price = new Serializer("price", {
     base: asset,
     quote: asset
 });
 
-export const asset_options = new Serializer("asset_options", {
+const asset_options = new Serializer("asset_options", {
     max_supply: int64,
     market_fee_percent: uint16,
     max_market_fee: int64,
@@ -669,7 +673,7 @@ export const asset_options = new Serializer("asset_options", {
     extensions: set(future_extensions)
 });
 
-export const bitasset_options = new Serializer("bitasset_options", {
+const bitasset_options = new Serializer("bitasset_options", {
     feed_lifetime_sec: uint32,
     minimum_feeds: uint8,
     force_settlement_delay_sec: uint32,
@@ -679,7 +683,7 @@ export const bitasset_options = new Serializer("bitasset_options", {
     extensions: set(future_extensions)
 });
 
-export const asset_create = new Serializer("asset_create", {
+const asset_create = new Serializer("asset_create", {
     fee: asset,
     issuer: protocol_id_type("account"),
     symbol: string,
@@ -690,7 +694,7 @@ export const asset_create = new Serializer("asset_create", {
     extensions: set(future_extensions)
 });
 
-export const asset_update = new Serializer("asset_update", {
+const asset_update = new Serializer("asset_update", {
     fee: asset,
     issuer: protocol_id_type("account"),
     asset_to_update: protocol_id_type("asset"),
@@ -699,7 +703,7 @@ export const asset_update = new Serializer("asset_update", {
     extensions: set(future_extensions)
 });
 
-export const asset_update_bitasset = new Serializer("asset_update_bitasset", {
+const asset_update_bitasset = new Serializer("asset_update_bitasset", {
     fee: asset,
     issuer: protocol_id_type("account"),
     asset_to_update: protocol_id_type("asset"),
@@ -707,7 +711,7 @@ export const asset_update_bitasset = new Serializer("asset_update_bitasset", {
     extensions: set(future_extensions)
 });
 
-export const asset_update_feed_producers = new Serializer(
+const asset_update_feed_producers = new Serializer(
     "asset_update_feed_producers",
     {
         fee: asset,
@@ -718,7 +722,7 @@ export const asset_update_feed_producers = new Serializer(
     }
 );
 
-export const asset_issue = new Serializer("asset_issue", {
+const asset_issue = new Serializer("asset_issue", {
     fee: asset,
     issuer: protocol_id_type("account"),
     asset_to_issue: asset,
@@ -727,14 +731,14 @@ export const asset_issue = new Serializer("asset_issue", {
     extensions: set(future_extensions)
 });
 
-export const asset_reserve = new Serializer("asset_reserve", {
+const asset_reserve = new Serializer("asset_reserve", {
     fee: asset,
     payer: protocol_id_type("account"),
     amount_to_reserve: asset,
     extensions: set(future_extensions)
 });
 
-export const asset_fund_fee_pool = new Serializer("asset_fund_fee_pool", {
+const asset_fund_fee_pool = new Serializer("asset_fund_fee_pool", {
     fee: asset,
     from_account: protocol_id_type("account"),
     asset_id: protocol_id_type("asset"),
@@ -742,14 +746,14 @@ export const asset_fund_fee_pool = new Serializer("asset_fund_fee_pool", {
     extensions: set(future_extensions)
 });
 
-export const asset_settle = new Serializer("asset_settle", {
+const asset_settle = new Serializer("asset_settle", {
     fee: asset,
     account: protocol_id_type("account"),
     amount: asset,
     extensions: set(future_extensions)
 });
 
-export const asset_global_settle = new Serializer("asset_global_settle", {
+const asset_global_settle = new Serializer("asset_global_settle", {
     fee: asset,
     issuer: protocol_id_type("account"),
     asset_to_settle: protocol_id_type("asset"),
@@ -757,7 +761,7 @@ export const asset_global_settle = new Serializer("asset_global_settle", {
     extensions: set(future_extensions)
 });
 
-export const participate_crowdfund = new Serializer("participate_crowdfund", {
+const participate_crowdfund = new Serializer("participate_crowdfund", {
     fee: asset,
     buyer: protocol_id_type("account"),
     valuation: int64,
@@ -766,12 +770,12 @@ export const participate_crowdfund = new Serializer("participate_crowdfund", {
     crowdfund: protocol_id_type("crowdfund")
     // extensions: set(future_extensions)
 });
-export const withdraw_crowdfund = new Serializer("withdraw_crowdfund", {
+const withdraw_crowdfund = new Serializer("withdraw_crowdfund", {
     fee: asset,
     buyer: protocol_id_type("account"),
     crowdfund_contract: protocol_id_type("crowdfund_contract")
 });
-export const initiate_crowdfund = new Serializer("initiate_crowdfund", {
+const initiate_crowdfund = new Serializer("initiate_crowdfund", {
     fee: asset,
     owner: protocol_id_type("account"),
     asset_id: protocol_id_type("asset"),
@@ -781,14 +785,14 @@ export const initiate_crowdfund = new Serializer("initiate_crowdfund", {
     // extensions: set(future_extensions)
 });
 
-export const price_feed = new Serializer("price_feed", {
+const price_feed = new Serializer("price_feed", {
     settlement_price: price,
     maintenance_collateral_ratio: uint16,
     maximum_short_squeeze_ratio: uint16,
     core_exchange_rate: price
 });
 
-export const asset_publish_feed = new Serializer("asset_publish_feed", {
+const asset_publish_feed = new Serializer("asset_publish_feed", {
     fee: asset,
     publisher: protocol_id_type("account"),
     asset_id: protocol_id_type("asset"),
@@ -796,14 +800,14 @@ export const asset_publish_feed = new Serializer("asset_publish_feed", {
     extensions: set(future_extensions)
 });
 
-export const witness_create = new Serializer("witness_create", {
+const witness_create = new Serializer("witness_create", {
     fee: asset,
     witness_account: protocol_id_type("account"),
     url: string,
     block_signing_key: public_key
 });
 
-export const witness_update = new Serializer("witness_update", {
+const witness_update = new Serializer("witness_update", {
     fee: asset,
     witness: protocol_id_type("witness"),
     witness_account: protocol_id_type("account"),
@@ -811,11 +815,11 @@ export const witness_update = new Serializer("witness_update", {
     new_signing_key: optional(public_key)
 });
 
-export const op_wrapper = new Serializer("op_wrapper", {
+const op_wrapper = new Serializer("op_wrapper", {
     op: operation
 });
 
-export const proposal_create = new Serializer("proposal_create", {
+const proposal_create = new Serializer("proposal_create", {
     fee: asset,
     fee_paying_account: protocol_id_type("account"),
     expiration_time: time_point_sec,
@@ -824,7 +828,7 @@ export const proposal_create = new Serializer("proposal_create", {
     extensions: set(future_extensions)
 });
 
-export const proposal_update = new Serializer("proposal_update", {
+const proposal_update = new Serializer("proposal_update", {
     fee: asset,
     fee_paying_account: protocol_id_type("account"),
     proposal: protocol_id_type("proposal"),
@@ -837,7 +841,7 @@ export const proposal_update = new Serializer("proposal_update", {
     extensions: set(future_extensions)
 });
 
-export const proposal_delete = new Serializer("proposal_delete", {
+const proposal_delete = new Serializer("proposal_delete", {
     fee: asset,
     fee_paying_account: protocol_id_type("account"),
     using_owner_authority: bool,
@@ -846,7 +850,7 @@ export const proposal_delete = new Serializer("proposal_delete", {
 });
 
 
-export const withdraw_permission_create = new Serializer(
+const withdraw_permission_create = new Serializer(
     "withdraw_permission_create",
     {
         fee: asset,
@@ -859,7 +863,7 @@ export const withdraw_permission_create = new Serializer(
     }
 );
 
-export const withdraw_permission_update = new Serializer(
+const withdraw_permission_update = new Serializer(
     "withdraw_permission_update",
     {
         fee: asset,
@@ -873,7 +877,7 @@ export const withdraw_permission_update = new Serializer(
     }
 );
 
-export const withdraw_permission_claim = new Serializer(
+const withdraw_permission_claim = new Serializer(
     "withdraw_permission_claim",
     {
         fee: asset,
@@ -885,7 +889,7 @@ export const withdraw_permission_claim = new Serializer(
     }
 );
 
-export const withdraw_permission_delete = new Serializer(
+const withdraw_permission_delete = new Serializer(
     "withdraw_permission_delete",
     {
         fee: asset,
@@ -895,7 +899,7 @@ export const withdraw_permission_delete = new Serializer(
     }
 );
 
-export const committee_member_create = new Serializer(
+const committee_member_create = new Serializer(
     "committee_member_create",
     {
         fee: asset,
@@ -904,7 +908,7 @@ export const committee_member_create = new Serializer(
     }
 );
 
-export const committee_member_update = new Serializer(
+const committee_member_update = new Serializer(
     "committee_member_update",
     {
         fee: asset,
@@ -914,7 +918,7 @@ export const committee_member_update = new Serializer(
     }
 );
 
-export const chain_parameters = new Serializer("chain_parameters", {
+const chain_parameters = new Serializer("chain_parameters", {
     current_fees: fee_schedule,
     block_interval: uint8,
     maintenance_interval: uint32,
@@ -946,7 +950,7 @@ export const chain_parameters = new Serializer("chain_parameters", {
     extensions: set(future_extensions)
 });
 
-export const committee_member_update_global_parameters = new Serializer(
+const committee_member_update_global_parameters = new Serializer(
     "committee_member_update_global_parameters",
     {
         fee: asset,
@@ -954,7 +958,7 @@ export const committee_member_update_global_parameters = new Serializer(
     }
 );
 
-export const linear_vesting_policy_initializer = new Serializer(
+const linear_vesting_policy_initializer = new Serializer(
     "linear_vesting_policy_initializer",
     {
         begin_timestamp: time_point_sec,
@@ -963,7 +967,7 @@ export const linear_vesting_policy_initializer = new Serializer(
     }
 );
 
-export const cdd_vesting_policy_initializer = new Serializer(
+const cdd_vesting_policy_initializer = new Serializer(
     "cdd_vesting_policy_initializer",
     {
         start_claim: time_point_sec,
@@ -976,7 +980,7 @@ var vesting_policy_initializer = static_variant([
     cdd_vesting_policy_initializer
 ]);
 
-export const vesting_balance_create = new Serializer("vesting_balance_create", {
+const vesting_balance_create = new Serializer("vesting_balance_create", {
     fee: asset,
     creator: protocol_id_type("account"),
     owner: protocol_id_type("account"),
@@ -984,7 +988,7 @@ export const vesting_balance_create = new Serializer("vesting_balance_create", {
     policy: vesting_policy_initializer
 });
 
-export const vesting_balance_withdraw = new Serializer(
+const vesting_balance_withdraw = new Serializer(
     "vesting_balance_withdraw",
     {
         fee: asset,
@@ -994,18 +998,18 @@ export const vesting_balance_withdraw = new Serializer(
     }
 );
 
-export const refund_worker_initializer = new Serializer(
+const refund_worker_initializer = new Serializer(
     "refund_worker_initializer"
 );
 
-export const vesting_balance_worker_initializer = new Serializer(
+const vesting_balance_worker_initializer = new Serializer(
     "vesting_balance_worker_initializer",
     {
         pay_vesting_period_days: uint16
     }
 );
 
-export const burn_worker_initializer = new Serializer(
+const burn_worker_initializer = new Serializer(
     "burn_worker_initializer"
 );
 
@@ -1015,7 +1019,7 @@ var worker_initializer = static_variant([
     burn_worker_initializer
 ]);
 
-export const worker_create = new Serializer("worker_create", {
+const worker_create = new Serializer("worker_create", {
     fee: asset,
     owner: protocol_id_type("account"),
     work_begin_date: time_point_sec,
@@ -1026,7 +1030,7 @@ export const worker_create = new Serializer("worker_create", {
     initializer: worker_initializer
 });
 
-export const custom = new Serializer("custom", {
+const custom = new Serializer("custom", {
     fee: asset,
     payer: protocol_id_type("account"),
     required_auths: set(protocol_id_type("account")),
@@ -1034,7 +1038,7 @@ export const custom = new Serializer("custom", {
     data: bytes()
 });
 
-export const account_name_eq_lit_predicate = new Serializer(
+const account_name_eq_lit_predicate = new Serializer(
     "account_name_eq_lit_predicate",
     {
         account_id: protocol_id_type("account"),
@@ -1042,7 +1046,7 @@ export const account_name_eq_lit_predicate = new Serializer(
     }
 );
 
-export const asset_symbol_eq_lit_predicate = new Serializer(
+const asset_symbol_eq_lit_predicate = new Serializer(
     "asset_symbol_eq_lit_predicate",
     {
         asset_id: protocol_id_type("asset"),
@@ -1050,7 +1054,7 @@ export const asset_symbol_eq_lit_predicate = new Serializer(
     }
 );
 
-export const block_id_predicate = new Serializer("block_id_predicate", {
+const block_id_predicate = new Serializer("block_id_predicate", {
     id: bytes(20)
 });
 
@@ -1060,7 +1064,7 @@ var predicate = static_variant([
     block_id_predicate
 ]);
 
-export const assert = new Serializer("assert", {
+const assert = new Serializer("assert", {
     fee: asset,
     fee_paying_account: protocol_id_type("account"),
     predicates: array(predicate),
@@ -1068,7 +1072,7 @@ export const assert = new Serializer("assert", {
     extensions: set(future_extensions)
 });
 
-export const balance_claim = new Serializer("balance_claim", {
+const balance_claim = new Serializer("balance_claim", {
     fee: asset,
     deposit_to_account: protocol_id_type("account"),
     balance_to_claim: protocol_id_type("balance"),
@@ -1076,7 +1080,7 @@ export const balance_claim = new Serializer("balance_claim", {
     total_claimed: asset
 });
 
-export const override_transfer = new Serializer("override_transfer", {
+const override_transfer = new Serializer("override_transfer", {
     fee: asset,
     issuer: protocol_id_type("account"),
     from: protocol_id_type("account"),
@@ -1086,20 +1090,20 @@ export const override_transfer = new Serializer("override_transfer", {
     extensions: set(future_extensions)
 });
 
-export const stealth_confirmation = new Serializer("stealth_confirmation", {
+const stealth_confirmation = new Serializer("stealth_confirmation", {
     one_time_key: public_key,
     to: optional(public_key),
     encrypted_memo: bytes()
 });
 
-export const blind_output = new Serializer("blind_output", {
+const blind_output = new Serializer("blind_output", {
     commitment: bytes(33),
     range_proof: bytes(),
     owner: authority,
     stealth_memo: optional(stealth_confirmation)
 });
 
-export const transfer_to_blind = new Serializer("transfer_to_blind", {
+const transfer_to_blind = new Serializer("transfer_to_blind", {
     fee: asset,
     amount: asset,
     from: protocol_id_type("account"),
@@ -1107,18 +1111,18 @@ export const transfer_to_blind = new Serializer("transfer_to_blind", {
     outputs: array(blind_output)
 });
 
-export const blind_input = new Serializer("blind_input", {
+const blind_input = new Serializer("blind_input", {
     commitment: bytes(33),
     owner: authority
 });
 
-export const blind_transfer = new Serializer("blind_transfer", {
+const blind_transfer = new Serializer("blind_transfer", {
     fee: asset,
     inputs: array(blind_input),
     outputs: array(blind_output)
 });
 
-export const transfer_from_blind = new Serializer("transfer_from_blind", {
+const transfer_from_blind = new Serializer("transfer_from_blind", {
     fee: asset,
     amount: asset,
     to: protocol_id_type("account"),
@@ -1126,7 +1130,7 @@ export const transfer_from_blind = new Serializer("transfer_from_blind", {
     inputs: array(blind_input)
 });
 
-export const asset_settle_cancel = new Serializer("asset_settle_cancel", {
+const asset_settle_cancel = new Serializer("asset_settle_cancel", {
     fee: asset,
     settlement: protocol_id_type("force_settlement"),
     account: protocol_id_type("account"),
@@ -1134,20 +1138,22 @@ export const asset_settle_cancel = new Serializer("asset_settle_cancel", {
     extensions: set(future_extensions)
 });
 
-export const asset_claim_fees = new Serializer("asset_claim_fees", {
+const asset_claim_fees = new Serializer("asset_claim_fees", {
     fee: asset,
     issuer: protocol_id_type("account"),
     amount_to_claim: asset,
     extensions: set(future_extensions)
 });
 
-export const cancel_all = new Serializer("cancel_all", {
+const cancel_all = new Serializer("cancel_all", {
     fee: asset,
     seller: protocol_id_type("account"),
     sell_asset_id:string,
     receive_asset_id:string,
     extensions: set(future_extensions)
 });
+
+exports.limit_order_cancel = limit_order_cancel;
 
 operation.st_operations = [
     transfer,
@@ -1201,7 +1207,7 @@ operation.st_operations = [
     cancel_all
 ];
 
-export const transaction = new Serializer("transaction", {
+const transaction = new Serializer("transaction", {
     ref_block_num: uint16,
     ref_block_prefix: uint32,
     expiration: time_point_sec,
@@ -1209,7 +1215,7 @@ export const transaction = new Serializer("transaction", {
     extensions: set(future_extensions)
 });
 
-export const signed_transaction = new Serializer("signed_transaction", {
+const signed_transaction = new Serializer("signed_transaction", {
     ref_block_num: uint16,
     ref_block_prefix: uint32,
     expiration: time_point_sec,
@@ -1223,15 +1229,16 @@ export const signed_transaction = new Serializer("signed_transaction", {
 
 // Custom Types
 
-export const stealth_memo_data = new Serializer("stealth_memo_data", {
+const stealth_memo_data = new Serializer("stealth_memo_data", {
     from: optional(public_key),
     amount: asset,
     blinding_factor: bytes(32),
     commitment: bytes(33),
     check: uint32
 });
+exports.stealth_memo_data = stealth_memo_data;
 
-export const fund_query = new Serializer("fund_query", {
+const fund_query = new Serializer("fund_query", {
     accountName: string,
     asset: optional(string),
     fundType: optional(string),
@@ -1239,9 +1246,16 @@ export const fund_query = new Serializer("fund_query", {
     offset: optional(uint32),
     expiration: time_point_sec
 });
+exports.fund_query = fund_query;
 // var stealth_confirmation = new Serializer(
 //     "stealth_confirmation", {
 //     one_time_key: public_key,
 //     to: optional( public_key ),
 //     encrypted_memo: stealth_memo_data
 // })
+
+exports.transaction = transaction;
+exports.signed_transaction = signed_transaction;
+exports.operation = operation;
+
+

@@ -123,4 +123,5 @@ ECSignature.prototype.toScriptSignature = function(hashType) {
   return Buffer.concat([this.toDER(), hashTypeBuffer])
 }
 
-export default ECSignature
+// export default ECSignature
+module.exports = ECSignature;

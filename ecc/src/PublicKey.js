@@ -1,11 +1,10 @@
-const {ChainConfig} = require('cybexjs-ws');
+// const {ChainConfig} = require('cybexjs-ws');
 
-const ecurve = require('ecurve');
+// const ecurve = require('ecurve');
 const {Point, getCurveByName} = require('ecurve');
 const BigInteger = require('bigi');
-const {encode, decode} = require('bs58');
+const { encode, decode } = require('bs58');
 const { sha256, sha512, ripemd160 } = require('./hash');
-const PublicKey = require('./PublicKey');
 const deepEqual = require("deep-equal");
 const assert = require("assert");
 
@@ -51,7 +50,7 @@ class PublicKey {
     }
 
     /** Alias for {@link toPublicKeyString} */
-    toString(address_prefix = ChainConfig.address_prefix) {
+    toString(address_prefix = "CYB") {
         return this.toPublicKeyString(address_prefix)
     }
 
@@ -59,7 +58,7 @@ class PublicKey {
         Full public key
         {return} string
     */
-    toPublicKeyString(address_prefix = ChainConfig.address_prefix) {
+    toPublicKeyString(address_prefix = "CYB") {
         var pub_buf = this.toBuffer();
         var checksum = ripemd160(pub_buf);
         var addy = Buffer.concat([pub_buf, checksum.slice(0, 4)]);
@@ -71,7 +70,7 @@ class PublicKey {
         @arg {string} address_prefix - like GPH
         @return PublicKey or `null` (if the public_key string is invalid)
     */
-    static fromPublicKeyString(public_key, address_prefix = ChainConfig.address_prefix) {
+    static fromPublicKeyString(public_key, address_prefix = "CYB") {
         try {
             return PublicKey.fromStringOrThrow(public_key, address_prefix)
         } catch (e) {
@@ -85,7 +84,7 @@ class PublicKey {
         @throws {Error} if public key is invalid
         @return PublicKey
     */
-    static fromStringOrThrow(public_key, address_prefix = ChainConfig.address_prefix) {
+    static fromStringOrThrow(public_key, address_prefix = "CYB") {
         var prefix = public_key.slice(0, address_prefix.length);
         assert.equal(
             address_prefix, prefix,
@@ -104,7 +103,7 @@ class PublicKey {
         return PublicKey.fromBuffer(public_key);
     }
 
-    toAddressString(address_prefix = ChainConfig.address_prefix) {
+    toAddressString(address_prefix = "CYB") {
         var pub_buf = this.toBuffer();
         var pub_sha = sha512(pub_buf);
         var addy = ripemd160(pub_sha);
@@ -172,5 +171,5 @@ class PublicKey {
     /* </HEX> */
 }
 
-
-export default PublicKey;
+module.exports = PublicKey;
+// export default PublicKey;

@@ -158,7 +158,8 @@ class PrivateKey {
     /* </helper_functions> */
 }
 
-export default PrivateKey;
+module.exports = PrivateKey;
+// export default PrivateKey;
 
 let toPublic = data => data == null ? data :
     data.Q ? data : PublicKey.fromStringOrThrow(data)

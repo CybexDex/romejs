@@ -101,4 +101,5 @@ ChainTypes.operations = {
     withdraw_crowdfund: 47,
 };
 
-export default ChainTypes;
+// export default ChainTypes;
+module.exports = ChainTypes;

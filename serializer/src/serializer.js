@@ -187,4 +187,5 @@ class Serializer {
     }
 }
 
-export default Serializer;
+// export default Serializer;
+module.exports = Serializer;
