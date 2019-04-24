@@ -99,6 +99,16 @@ ChainTypes.operations = {
     initiate_crowdfund: 45,
     participate_crowdfund: 46,
     withdraw_crowdfund: 47,
+    cancel_vesting:48,
+    fill_crowdfund:49,
+    bid_collateral:50,
+    execute_bid:51,
+    cancel_all:52,
+    initiate_dice_bet:53,
+    deposit_dice_bet:54,
+    withdraw_dice_bet:55,
+    participate_dice_bet:56,
+    dice_bet_clearing:57
 };
 
 // export default ChainTypes;

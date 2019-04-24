@@ -84,7 +84,7 @@ var cybex_ext_xfer_to_many = new Serializer("cybex_ext_xfer_to_many", {
 });
 
 var cancel_by_transaction_id = new Serializer("cancel_by_transaction_id", {
-    trx_id: string
+    trx_id: bytes(40)
 });
 
 var future_extensions = static_variant([
@@ -1145,15 +1145,25 @@ const asset_claim_fees = new Serializer("asset_claim_fees", {
     extensions: set(future_extensions)
 });
 
+const cancel_vesting = new Serializer("cancel_vesting", {});
+const fill_crowdfund = new Serializer("fill_crowdfund", {});
+const bid_collateral = new Serializer("bid_collateral", {});
+const execute_bid = new Serializer("execute_bid", {});
+const initiate_dice_bet = new Serializer("initiate_dice_bet", {});
+const deposit_dice_bet = new Serializer("deposit_dice_bet", {});
+const withdraw_dice_bet = new Serializer("withdraw_dice_bet", {});
+const participate_dice_bet = new Serializer("participate_dice_bet", {});
+const dice_bet_clearing = new Serializer("dice_bet_clearing", {});
+
 const cancel_all = new Serializer("cancel_all", {
     fee: asset,
     seller: protocol_id_type("account"),
-    sell_asset_id:string,
-    receive_asset_id:string,
+    sell_asset_id:protocol_id_type("asset"),
+    receive_asset_id:protocol_id_type("asset"),
     extensions: set(future_extensions)
 });
 
-exports.limit_order_cancel = limit_order_cancel;
+exports.cancel_all = cancel_all;
 
 operation.st_operations = [
     transfer,
@@ -1204,7 +1214,16 @@ operation.st_operations = [
     initiate_crowdfund,
     participate_crowdfund,
     withdraw_crowdfund,
-    cancel_all
+    cancel_vesting,
+    fill_crowdfund,
+    bid_collateral,
+    execute_bid,
+    cancel_all,
+    initiate_dice_bet,
+    deposit_dice_bet,
+    withdraw_dice_bet,
+    participate_dice_bet,
+    dice_bet_clearing
 ];
 
 const transaction = new Serializer("transaction", {

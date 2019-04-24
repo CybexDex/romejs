@@ -174,82 +174,83 @@ class TransactionBuilder {
         if (!operation.fee) {
             operation.fee = { amount: 0, asset_id: 0 };
         }
-        if (name === "proposal_create") {
-            /*
-                  * Proposals involving the committee account require a review
-                  * period to be set, look for them here
-                  */
-            let requiresReview = false,
-                extraReview = 0;
-            operation.proposed_ops.forEach(op => {
-                const COMMITTE_ACCOUNT = 0;
-                let key;
-
-                switch (op.op[0]) {
-                    case 0: // transfer
-                        key = "from";
-                        break;
-
-                    case 6: //account_update
-                    case 17: // asset_settle
-                        key = "account";
-                        break;
-
-                    case 10: // asset_create
-                    case 11: // asset_update
-                    case 12: // asset_update_bitasset
-                    case 13: // asset_update_feed_producers
-                    case 14: // asset_issue
-                    case 18: // asset_global_settle
-                    case 43: // asset_claim_fees
-                        key = "issuer";
-                        break;
-
-                    case 15: // asset_reserve
-                        key = "payer";
-                        break;
-
-                    case 16: // asset_fund_fee_pool
-                        key = "from_account";
-                        break;
-
-                    case 22: // proposal_create
-                    case 23: // proposal_update
-                    case 24: // proposal_delete
-                        key = "fee_paying_account";
-                        break;
-
-                    case 45: // initiate_crowdfund
-                        key = "owner";
-                        break;
-
-                    case 31: // committee_member_update_global_parameters
-                        requiresReview = true;
-                        extraReview = 60 * 60 * 24 * 13; // Make the review period 2 weeks total
-                        break;
-                }
-                if (key in op.op[1] && op.op[1][key] === COMMITTE_ACCOUNT) {
-                    requiresReview = true;
-                }
-            });
-            operation.expiration_time ||
-            (operation.expiration_time =
-                Math.ceil(Date.now() / 1000) + expire_in_secs_proposal);
-            if (requiresReview) {
-                operation.review_period_seconds =
-                    extraReview +
-                    Math.max(
-                        committee_min_review,
-                        24 * 60 * 60 || review_in_secs_committee
-                    );
-                /*
-                        * Expiration time must be at least equal to
-                        * now + review_period_seconds, so we add one hour to make sure
-                        */
-                operation.expiration_time += 60 * 60 + extraReview;
-            }
-        }
+        // if (name === "proposal_create") {
+        //     /*
+        //           * Proposals involving the committee account require a review
+        //           * period to be set, look for them here
+        //           */
+        //     let requiresReview = false,
+        //         extraReview = 0;
+        //     operation.proposed_ops.forEach(op => {
+        //         const COMMITTE_ACCOUNT = 0;
+        //         let key;
+        //
+        //         switch (op.op[0]) {
+        //             case 0: // transfer
+        //                 key = "from";
+        //                 break;
+        //
+        //             case 6: //account_update
+        //             case 17: // asset_settle
+        //                 key = "account";
+        //                 break;
+        //
+        //             case 10: // asset_create
+        //             case 11: // asset_update
+        //             case 12: // asset_update_bitasset
+        //             case 13: // asset_update_feed_producers
+        //             case 14: // asset_issue
+        //             case 18: // asset_global_settle
+        //             case 43: // asset_claim_fees
+        //                 key = "issuer";
+        //                 break;
+        //
+        //             case 15: // asset_reserve
+        //                 key = "payer";
+        //                 break;
+        //
+        //             case 16: // asset_fund_fee_pool
+        //                 key = "from_account";
+        //                 break;
+        //
+        //             case 22: // proposal_create
+        //             case 23: // proposal_update
+        //             case 24: // proposal_delete
+        //                 key = "fee_paying_account";
+        //                 break;
+        //
+        //             case 45: // initiate_crowdfund
+        //                 key = "owner";
+        //                 break;
+        //
+        //             case 31: // committee_member_update_global_parameters
+        //                 requiresReview = true;
+        //                 extraReview = 60 * 60 * 24 * 13; // Make the review period 2 weeks total
+        //                 break;
+        //         }
+        //         if (key in op.op[1] && op.op[1][key] === COMMITTE_ACCOUNT) {
+        //             requiresReview = true;
+        //         }
+        //     });
+        //     operation.expiration_time ||
+        //     (operation.expiration_time =
+        //         Math.ceil(Date.now() / 1000) + expire_in_secs_proposal);
+        //     if (requiresReview) {
+        //         operation.review_period_seconds =
+        //             extraReview +
+        //             Math.max(
+        //                 committee_min_review,
+        //                 24 * 60 * 60 || review_in_secs_committee
+        //             );
+        //         /*
+        //                 * Expiration time must be at least equal to
+        //                 * now + review_period_seconds, so we add one hour to make sure
+        //                 */
+        //         operation.expiration_time += 60 * 60 + extraReview;
+        //     }
+        // }
         var operation_instance = _type.fromObject(operation);
+
         return [operation_id, operation_instance];
     }
 
@@ -275,8 +276,9 @@ class TransactionBuilder {
         if (this.tr_buffer) {
             throw new Error("already finalized");
         }
-        const _sec = sec? sec:1000;
-        return (this.expiration = Math.floor(Date.now() / 1000) + _sec );
+        // const _sec = sec? sec:1000;
+        // return (this.expiration = Math.floor(Date.now() / 1000) + _sec );
+        this.expiration = sec;
     }
 
     /* Wraps this transaction in a proposal_create transaction */
@@ -525,6 +527,7 @@ class TransactionBuilder {
             private_key,
             PublicKey.fromPublicKeyString(public_key)
         );
+        this.signed = true;
 
         return sig.toHex()
     }
