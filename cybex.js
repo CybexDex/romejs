@@ -32,11 +32,16 @@ class CybexSigner {
     op_sign(type_name, obj, trx_id) {
 
         let tr = new TransactionBuilder();
+
+        tr.ref_block_num = this.params.ref_block_num;
+        tr.ref_block_prefix = this.params.ref_block_prefix;
+
         tr.add_type_operation(type_name, obj);
 
         const sig = tr.sign_with_key(this.chain_id, this.pKey);
 
         if (type_name === "limit_order_create") {
+            console.log(obj);
 
             return {
                 transactionType: "NewLimitOrder",
@@ -45,12 +50,12 @@ class CybexSigner {
                 refBlockPrefix: this.params.ref_block_prefix,
                 txExpiration: tr.expiration,
                 fee: {assetId: this.fee_asset_id, amount: 55},
-                seller: this.user.id,
+                seller: obj.seller,
                 amountToSell: {"assetId": obj.amount_to_sell.asset_id, amount: obj.amount_to_sell.amount},
                 minToReceive: {"assetId": obj.min_to_receive.asset_id, amount: obj.min_to_receive.amount},
                 expiration: obj.expiration,
                 signature: sig,
-                fill_or_kill: obj.fill_or_kill,
+                fill_or_kill: obj.fill_or_kill?1:0,
                 isBuy: 0
             };
 
@@ -128,6 +133,7 @@ class CybexSigner {
                 sell = quote;
                 buy = base
             }
+
             let obj = {
                 "seller": this.user.id,
                 "amount_to_sell": sell,
@@ -188,23 +194,46 @@ class CybexSigner {
     }
 }
 
-class Pair {
-    constructor(availableAssets, availableAssetPairs) {
-        this.availableAssets = availableAssets;
-        this.availableAssetPairs = availableAssetPairs;
+class Cybex {
+    constructor(accountName = undefined, account = undefined, key = undefined, environ = "prod", verbose=true) {
+        this.apiEndPoint = "https://api.cybex.io/v1/";
+        if (accountName) {
+            this.accountName = accountName;
+        }
+        this.setSigner(account, key);
+        this.loaded = false;
+        this.verbose=verbose;
     }
 
-    set_all(availableAssets, availableAssetPairs) {
-        this.availableAssets = availableAssets;
-        this.availableAssetPairs = availableAssetPairs;
+    executeRestRequest(url, method = 'GET', data = undefined) {
+        if(this.verbose&&data){
+            console.log(data);
+        }
+        return fetch(url, { method: method, body: JSON.stringify(data), headers: {'Content-type': 'application/json'} })
+            .catch(error=>{
+                console.log(error);
+            })
+            .then(res => res.json());
     }
 
-    get_pair(assetPair) {
+    setSigner(account, key){
+        if (account && key) {
+            this.signer = new CybexSigner(account, key);
+        }
+    }
+
+    async get_pair(assetPair) {
+
+        if(!this.loaded){
+            const res = await this.loadMarkets()
+        }
+
         var result = this.availableAssetPairs.filter(pair => {
             return pair.name === assetPair
         })
         if (result.length === 1) {
             const _pair = assetPair.split("/");
+            const matched = result[0];
 
             var match_base = this.availableAssets.filter(asset => {
                 return asset.assetName === _pair[0]
@@ -215,95 +244,39 @@ class Pair {
             })
 
             if (match_base.length === 1 && match_quote.length === 1) {
-                result.base = match_base[0];
-                result.quote = match_quote[0];
+                matched.base = match_base[0];
+                matched.quote = match_quote[0];
             }
-            return result
+            return matched
         }
 
         return null;
 
     }
-}
 
-const pair = {
-    "name": "ETH/UDST",
-    "minTickSize": 0.0001,
-    "minQuantity": 0.1,
-    "base": {
-        "assetName": "ETH",
-        "assetId": "1.3.2",
-        "precision": 6
-    }, "quote": {
-        "assetName": "USDT",
-        "assetId": "1.3.27",
-        "precision": 6
-    }
-};
-
-// const signer = new CybexSigner("1.2.46197", "5KADTmswGdzfwQrmYwTG1mLUGsvRP1TzUkXfgJoJ1keqJw6SF6z");
-// let s = signer.limit_order_create(pair, "buy", 15.1, 0.01, 15.1 * 0.01);
-// console.log(s)
-// s = signer.limit_order_cancel("8400ce34cebd1251b08b8b5e9059e01059c00b79");
-// console.log(s)
-//
-// s = signer.cancel_all(pair);
-// console.log(s)
-
-class Cybex {
-    constructor(accountName = undefined, account = undefined, key = undefined, environ = "prod") {
-        this.apiEndPoint = "https://api.cybex.io/v1/";
-        if (accountName) {
-            this.accountName = accountName;
-        }
-        this.setSigner(account, key);
-        this.listpairs = new Pair();
-        this.loaded = false;
-        this.loadMarkets()
-    }
-
-    executeRestRequest(url, method = 'GET', body = undefined) {
-
-        return fetch(url, { method: method, body: body, headers: {'Content-type': 'application/json'} })
-            .then(res => res.json());
-    }
-
-    setSigner(account, key){
-        if (account && key) {
-            this.signer = CybexSigner(account, key);
+    async loadMarkets(reload=false) {
+        if(reload||!this.loaded){
+            return await this.fetchMarkets();
         }
     }
 
-    async loadMarkets() {
+    async fetchMarkets() {
         const url = this.apiEndPoint + "refData";
 
-        return this.executeRestRequest(url).then(res => {
+        const res = await this.executeRestRequest(url).then(res => {
 
             this.chainId = res.chainId;
             this.refBlockId = res.refBlockId;
             this.availableAssets = res.availableAssets;
             this.availableAssetPairs = res.availableAssetPairs;
-            this.listpairs.set_all(res.availableAssets, res.availableAssetPairs);
 
             if (this.signer) {
                 this.signer.set_chain_params(res.chainId, res.refBlockId);
             }
             this.loaded = true;
+        });
 
-            return true;
-        })
-    }
-
-    fetchMarkets() {
-        return None
-    }
-
-    fetchTicker() {
-        return None
-    }
-
-    fetchTickers() {
-        return None
+        return this.availableAssetPairs
     }
 
     async fetchOrderBook(assetPair, limit=3) {
@@ -337,22 +310,39 @@ class Cybex {
     }
 
     async fetchBestPrice(assetPair){
-        const orderbook = await this.fetchOrder(assetPair, 1);
+        const orderbook = await this.fetchOrderBook(assetPair, 1);
         return {bid:orderbook.bids[0][0], ask:orderbook.asks[0][0]}
 
     }
 
     async createOrder(assetPair, side, amount, price) {
+
         if(this.signer){
             if(!this.loaded){
                 const res = await this.loadMarkets()
             }
-            const parsed = this.listpairs.get_pair(assetPair);
 
-            const signedTx = this.signer.limit_order_create(parsed, side, price, amount, price*amount);
+            const parsed = await this.get_pair(assetPair);
+            const total = amount*price;
 
-            const url = this.apiEndPoint + "transaction"
-            return await this.executeRestRequest(url, "POST", signedTx);
+            if( parsed.minQuantity && (amount<parsed.minQuantity)){
+                console.log("Mininum quantity is "+parsed.minQuantity);
+                return
+            }
+            if( parsed.minTickSize && (total<parsed.minTickSize)){
+                console.log("Mininum minTickSize is "+parsed.minQuantity);
+                return
+            }
+            const signedTx = this.signer.limit_order_create(parsed, side, price, amount, total);
+            //signedTx.isBuy = side==="buy"?1:0;
+            const url = this.apiEndPoint + "transaction";
+
+            const res = await this.executeRestRequest(url, "POST", signedTx);
+            if(res.Status === 'Successful'){
+                res.transactionId=signedTx.transactionId;
+                return res;
+            }
+            console.log(res);
         }
     }
 
@@ -367,7 +357,7 @@ class Cybex {
 
     async createMarketBuyOrder(assetPair, amount) {
         const bestPrice = await this.fetchBestPrice(assetPair);
-        return this.createOrder(assetPair, "sell", amount, bestPrice.ask*1.01);
+        return this.createOrder(assetPair, "buy", amount, bestPrice.ask*1.01);
     }
 
     async createMarketSellOrder(assetPair, amount) {
@@ -377,23 +367,30 @@ class Cybex {
 
     async cancelOrder(trx_id) {
         if(this.signer){
+
             if(!this.loaded){
                 const res = await this.loadMarkets()
             }
-            const parsed = this.listpairs.get_pair(assetPair);
 
-            const signedTx = this.signer.cancel_all(parsed)
+            const signedTx = this.signer.limit_order_cancel(trx_id);
 
-            const url = this.apiEndPoint + "transaction"
+            const url = this.apiEndPoint + "transaction";
+
             return await this.executeRestRequest(url, "POST", signedTx);
         }
     }
 
     async cancelAll(assetPair) {
         if(this.signer){
-            const signedTx = this.signer.limit_order_cancel(trx_id);
+            if(!this.loaded){
+                const res = await this.loadMarkets()
+            }
 
-            const url = this.apiEndPoint + "transaction";
+            const parsed = await this.get_pair(assetPair);
+
+            const signedTx = this.signer.cancel_all(parsed)
+
+            const url = this.apiEndPoint + "transaction"
             return await this.executeRestRequest(url, "POST", signedTx);
         }
     }
@@ -440,38 +437,7 @@ class Cybex {
             return await this.executeRestRequest(url)
         }
     }
-
-    test(assetPair) {
-        if(!this.loaded){
-            this.loadMarkets().then(res=>{
-                this.listpairs.get_pair(assetPair);
-            })
-        }
-        return this.listpairs.get_pair(assetPair);
-    }
 }
 
-
-(async () => {
-
-    const cybex = new Cybex();
-    const assetPair = "ETH/USDT";
-
-    const orderbook = await cybex.fetchOrderBook(assetPair, 1);
-    console.log(orderbook);
-
-    // const olhcv = await cybex.fetchOHLCV(assetPair);
-    // console.log(olhcv);
-
-    // const balance = await cybex.fetchBalance("shanti001");
-    // console.log(balance);
-
-    // const pubTrades = await cybex.fetchTrades(assetPair, true, 5);
-    // console.log(pubTrades);
-    //
-    // const response = await cybex.createOrder (assetPair, side, amount, price);
-
-
-
-})();
+module.exports = Cybex;
 
