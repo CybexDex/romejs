@@ -1,5 +1,6 @@
 const PrivateKey = require('./ecc/src/PrivateKey');
 const TransactionBuilder = require('./serializer/TransactionBuilder');
+const {generateKeys} = require("./ecc/src/AccountLogin");
 
 const {fetch, Request, Response, Headers} = require('fetch-ponyfill')({});
 
@@ -196,13 +197,14 @@ class CybexSigner {
 
 class Cybex {
     constructor(accountName = undefined, account = undefined, key = undefined, environ = "prod", verbose=true) {
-        this.apiEndPoint = "https://api.cybex.io/v1/";
-        if (accountName) {
-            this.accountName = accountName;
-        }
+        this.apiEndPoint = environ==='prod'?"https://api.cybex.io/v1/":"https://apitest.cybex.io/v1/";
+        this.accountName = accountName;
         this.setSigner(account, key);
         this.loaded = false;
         this.verbose=verbose;
+
+        // const pkey = generateKeys(accountName,password)
+        // const key = pkey.toWif()
     }
 
     executeRestRequest(url, method = 'GET', data = undefined) {
