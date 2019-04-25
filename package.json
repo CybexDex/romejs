@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "dependencies": {
     "request": "^2.88.0",
-    "cybexjs-ws": "^1.1.14",
+    "fetch-ponyfill": "4.1.0",
     "bigi": "^1.4.2",
     "bs58": "^4.0.1",
     "bytebuffer": "^5.0.1",
@@ -11,10 +11,6 @@
     "create-hmac": "^1.1.6",
     "crypto-js": "^3.1.9-1",
     "deep-equal": "^1.0.1",
-    "ecurve": "^1.0.5",
-    "eosjs-ecc": "^4.0.1",
-    "event-emitter": "^0.3.4",
-    "immutable": "^3.8.1",
-    "secure-random": "^1.1.1"
+    "ecurve": "^1.0.5"
   }
 }
