@@ -18,8 +18,9 @@
     const pubTrades = await cybex.fetchTrades(assetPair, true, 5);
     console.log(pubTrades);
     
-    
-    cybex.setSigner("account","key");
+ 
+    const r = await cybex.setSigner({accountName:"accountName", "password":"password"});
+    // const r = await cybex.setSigner({account:"1.2.xxxxx", "key":"private_key"});
     const res= cybex.createMarketBuyOrder(assetPair, 0.01);
     console.log(res);
     

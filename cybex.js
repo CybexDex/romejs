@@ -13,21 +13,96 @@ function block_params(ref_block_id) {
 
 class CybexSigner {
 
-    constructor(account, key, chain_id, ref_block_id) {
-        this.user = {id: account};
-        this.wifKey = key;
-        this.pKey = PrivateKey.fromWif(this.wifKey);
+    constructor(account, key) {
+        this.set_credential(account, key);
 
         this.fee_asset_id = "1.3.0";
-        this.chain_id = chain_id ? chain_id : "90be01e82b981c8f201c9a78a3d31f655743b29ff3274727b1439b093d04aa23";
-        const ref_block = ref_block_id ? ref_block_id : "00b803c9b121dbb369d17cf68d125884f22a0190";
+        this.chain_id = "90be01e82b981c8f201c9a78a3d31f655743b29ff3274727b1439b093d04aa23";
+        const ref_block = "00b803c9b121dbb369d17cf68d125884f22a0190";
         this.params = block_params(ref_block);
+
+        this.availableAssets = [];
+        this.availableAssetPairs = [];
+        this.user={};
+        this.has_crendential = false;
     }
 
-    set_chain_params(chain_id, ref_block_id) {
+    executeRestRequest(url, method = 'GET', data = undefined) {
+        return fetch(url, { method: method, body: JSON.stringify(data), headers: {'Content-type': 'application/json'} })
+            .catch(error=>{
+                console.log(error);
+            })
+            .then(res => res.json());
+    }
+
+    set_chain_params(chain_id, ref_block_id, availableAssets, availableAssetPairs) {
         this.chain_id = chain_id ? chain_id : "90be01e82b981c8f201c9a78a3d31f655743b29ff3274727b1439b093d04aa23";
         const ref_block = ref_block_id ? ref_block_id : "00b803c9b121dbb369d17cf68d125884f22a0190";
         this.params = block_params(ref_block);
+
+        this.availableAssets = availableAssets;
+        this.availableAssetPairs = availableAssetPairs;
+    }
+
+    async set_credential(account, key){
+
+        if(account && key){
+            const privateKey = PrivateKey.fromWif(key);
+            const data = {"method":"call","params":[0,"get_objects",[[account]]],"id":2};
+            const _Res = await this.executeRestRequest("https://apihk.cybex.io/", "POST", data);
+            const pubKeyRes = _Res.result[0];
+
+            if(pubKeyRes.id === account){
+                // check active key
+                pubKeyRes.active.key_auths.forEach(pubkey=>{
+
+                    if(pubkey[0] === privateKey.toPublicKey().toString()){
+                        this.set_valid_crendential(account, privateKey);
+                    }
+                })
+                // check owner key
+                pubKeyRes.owner.key_auths.forEach(pubkey=>{
+
+                    if(pubkey[0] === privateKey.toPublicKey().toString()){
+                        this.set_valid_crendential(account, privateKey);
+                    }
+                })
+            }
+        }
+    }
+
+    set_valid_crendential(account, privateKey){
+        this.pKey = privateKey;
+        this.user = {id: account};
+        this.has_crendential = true;
+    }
+
+    get_pair(assetPair) {
+
+        var result = this.availableAssetPairs.filter(pair => {
+            return pair.name === assetPair
+        })
+        if (result.length === 1) {
+            const _pair = assetPair.split("/");
+            const matched = result[0];
+
+            var match_base = this.availableAssets.filter(asset => {
+                return asset.assetName === _pair[0]
+            })
+
+            var match_quote = this.availableAssets.filter(asset => {
+                return asset.assetName === _pair[1]
+            })
+
+            if (match_base.length === 1 && match_quote.length === 1) {
+                matched.base = match_base[0];
+                matched.quote = match_quote[0];
+            }
+            return matched
+        }
+
+        return null;
+
     }
 
     op_sign(type_name, obj, trx_id) {
@@ -104,8 +179,14 @@ class CybexSigner {
     // }
 
     limit_order_create(pair, side, price, amount, total = null) {
-        const base_id = pair.base.assetId;
-        const quote_id = pair.quote.assetId;
+        if(!this.has_crendential) {
+            throw new Error("You need to provide credentials for signing")
+        }
+
+        if(typeof pair === 'string'){
+            pair = this.get_pair(pair)
+        }
+
         try {
             // calculate utc end of day
             const end = new Date();
@@ -120,11 +201,11 @@ class CybexSigner {
             }
             let base_amount = parseInt(amount * Math.pow(10, pair.base.precision));//this.assetAmountRaw(base_id, total)
             let base = {
-                asset_id: base_id,
+                asset_id: pair.base.assetId,
                 amount: base_amount
             };
             let quote = {
-                asset_id: quote_id,
+                asset_id: pair.quote.assetId,
                 amount: quote_amount
             };
             if (side === "buy") {
@@ -155,6 +236,9 @@ class CybexSigner {
     }
 
     limit_order_cancel(trx_id) {
+        if(!this.has_crendential) {
+            throw new Error("You need to provide credentials for signing")
+        }
         try {
             let obj = {
                 "fee_paying_account": this.user.id,
@@ -175,8 +259,13 @@ class CybexSigner {
     }
 
     cancel_all(pair) {
-        const base_id = pair.base.assetId;
-        const quote_id = pair.quote.assetId;
+        if(!this.has_crendential) {
+            throw new Error("You need to provide credentials for signing")
+        }
+        if(typeof pair === 'string'){
+            pair = this.get_pair(pair)
+        }
+
         try {
             let obj = {
                 "seller": this.user.id,
@@ -184,8 +273,8 @@ class CybexSigner {
                     "amount": 5,
                     "asset_id": this.fee_asset_id
                 },
-                "sell_asset_id": quote_id,
-                "receive_asset_id": base_id
+                "sell_asset_id": pair.quote.assetId,
+                "receive_asset_id": pair.base.assetId
             }
             return this.op_sign("cancel_all", obj)
 
@@ -199,13 +288,13 @@ class Cybex {
     constructor(accountName = undefined, account = undefined, key = undefined, environ = "prod", verbose=true) {
         this.apiEndPoint = environ==='prod'?"https://api.cybex.io/v1/":"https://apitest.cybex.io/v1/";
         this.accountName = accountName;
-        this.setSigner(account, key);
+
         this.loaded = false;
         this.verbose=verbose;
-
-        // const pkey = generateKeys(accountName,password)
-        // const key = pkey.toWif()
+        this.signer = new CybexSigner();
+        this.config = {account:account, key:key, accountName:accountName};
     }
+
 
     executeRestRequest(url, method = 'GET', data = undefined) {
         if(this.verbose&&data){
@@ -217,11 +306,28 @@ class Cybex {
             })
             .then(res => res.json());
     }
+    async setSigner(config){
+        this.verbose = config.verbose;
+        this.enableRateLimit = config.enableRateLimit;
 
-    setSigner(account, key){
-        if (account && key) {
-            this.signer = new CybexSigner(account, key);
+
+        if(!config.account && config.accountName){
+            const data = {"method": "call", "params": [0, "lookup_accounts",[config.accountName, 50]], "id": 1};
+            const prod_chain_endpoint = "https://hongkong.cybex.io/";
+
+            const res = await this.executeRestRequest(prod_chain_endpoint, "POST", data);
+            if(res.result.length&&res.result[0].length>1){
+                config.account = res.result[0][1]
+            }
+
         }
+
+        if(!config.key && config.accountName && config.password){
+            const genedKey = generateKeys(config.accountName,config.password)
+            config.key = genedKey.toWif()
+        }
+
+        return await this.signer.set_credential(config.account, config.key);
     }
 
     async get_pair(assetPair) {
@@ -267,14 +373,13 @@ class Cybex {
 
         const res = await this.executeRestRequest(url).then(res => {
 
-            this.chainId = res.chainId;
-            this.refBlockId = res.refBlockId;
+            // this.chainId = res.chainId;
+            // this.refBlockId = res.refBlockId;
             this.availableAssets = res.availableAssets;
             this.availableAssetPairs = res.availableAssetPairs;
 
-            if (this.signer) {
-                this.signer.set_chain_params(res.chainId, res.refBlockId);
-            }
+            this.signer.set_chain_params(res.chainId, res.refBlockId, res.availableAssets, res.availableAssetPairs );
+
             this.loaded = true;
         });
 

@@ -9,7 +9,7 @@ const normalize_brainKey = function (brainKey) {
     return brainKey.split(/[\t\n\v\f\r ]+/).join(' ');
 }
 
-const generateKeys = function (accountName, password, role = "active", prefix) {
+const generateKeys = function (accountName, password, role = "active") {
 
     if (!accountName || !password) {
         throw new Error("Account name or password required");
