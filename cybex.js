@@ -179,6 +179,8 @@ class CybexSigner {
     // }
 
     limit_order_create(pair, side, price, amount, total = null) {
+        // console.log(side, "price:",price,"amount", amount);
+
         if(!this.has_crendential) {
             throw new Error("You need to provide credentials for signing")
         }
@@ -194,12 +196,12 @@ class CybexSigner {
             const exp = Math.floor(end / 1000) + 1;
 
             // calculate buy sell
-            let sell, buy;
-            let quote_amount = parseInt(amount * Math.pow(10, pair.quote.precision));//this.assetAmountRaw(quote_id, amount)
+            let sell, receive;
+            let base_amount = parseInt(amount * Math.pow(10, pair.base.precision));//this.assetAmountRaw(quote_id, amount)
             if (!total) {
                 total = amount * price
             }
-            let base_amount = parseInt(total * Math.pow(10, pair.base.precision));//this.assetAmountRaw(base_id, total)
+            let quote_amount = parseInt(total * Math.pow(10, pair.quote.precision));//this.assetAmountRaw(base_id, total)
             let base = {
                 asset_id: pair.base.assetId,
                 amount: base_amount
@@ -209,17 +211,17 @@ class CybexSigner {
                 amount: quote_amount
             };
             if (side === "buy") {
-                sell = base;
-                buy = quote
-            } else {
                 sell = quote;
-                buy = base
+                receive = base
+            } else {
+                sell = base;
+                receive = quote
             }
 
             let obj = {
                 "seller": this.user.id,
                 "amount_to_sell": sell,
-                "min_to_receive": buy,
+                "min_to_receive": receive  ,
                 "expiration": exp,
                 "fill_or_kill": false,
                 "fee": {
