@@ -1,6 +1,6 @@
 {
   "name": "romejs",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "dependencies": {
     "fetch-ponyfill": "4.1.0",
     "bigi": "^1.4.2",
