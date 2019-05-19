@@ -199,7 +199,7 @@ class CybexSigner {
             if (!total) {
                 total = amount * price
             }
-            let base_amount = parseInt(amount * Math.pow(10, pair.base.precision));//this.assetAmountRaw(base_id, total)
+            let base_amount = parseInt(total * Math.pow(10, pair.base.precision));//this.assetAmountRaw(base_id, total)
             let base = {
                 asset_id: pair.base.assetId,
                 amount: base_amount
