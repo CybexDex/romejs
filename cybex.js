@@ -287,14 +287,29 @@ class CybexSigner {
 }
 
 class Cybex {
-    constructor(accountName = undefined, account = undefined, key = undefined, environ = "prod", verbose=true) {
-        this.apiEndPoint = environ==='prod'?"https://api.cybex.io/v1/":"https://apitest.cybex.io/v1/";
-        this.accountName = accountName;
-
+    constructor(config) {
         this.loaded = false;
-        this.verbose=verbose;
         this.signer = new CybexSigner();
-        this.config = {account:account, key:key, accountName:accountName};
+
+        //accountName = undefined, account = undefined, key = undefined, environ = "prod", verbose=true
+        this.apiEndPoint = "https://api.cybex.io/v1/";
+        this.verbose= true;
+
+        if(config){
+            if(config.environ && config.environ==='uat'){
+                this.apiEndPoint = "https://apitest.cybex.io/v1/";
+            }
+            if(config.verbose){
+                this.verbose = config.verbose;
+            }
+            if(config.enableRateLimit){
+                this.enableRateLimit = config.enableRateLimit;
+            }
+            if(config.accountName){
+                this.accountName = this.accountName;
+            }
+        }
+        // this.config = {account:account, key:key, accountName:accountName};
     }
 
 
@@ -309,9 +324,8 @@ class Cybex {
             .then(res => res.json());
     }
     async setSigner(config){
-        this.verbose = config.verbose;
-        this.enableRateLimit = config.enableRateLimit;
-
+        this.verbose = config?config.verbose:this.verbose;
+        this.enableRateLimit = config?config.enableRateLimit:this.enableRateLimit;
 
         if(!config.account && config.accountName){
             const data = {"method": "call", "params": [0, "lookup_accounts",[config.accountName, 50]], "id": 1};
