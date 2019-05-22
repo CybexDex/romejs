@@ -132,7 +132,7 @@ class CybexSigner {
                 expiration: obj.expiration,
                 signature: sig,
                 fill_or_kill: obj.fill_or_kill?1:0,
-                isBuy: 0
+                isBuy: obj.isBuy
             };
 
         } else if (type_name === "limit_order_cancel") {
@@ -182,7 +182,7 @@ class CybexSigner {
         // console.log(side, "price:",price,"amount", amount);
 
         if(!this.has_crendential) {
-            throw new Error("You need to provide credentials for signing")
+            throw new Error("You need to provide valid credentials for signing")
         }
 
         if(typeof pair === 'string'){
@@ -194,6 +194,8 @@ class CybexSigner {
             const end = new Date();
             end.setHours(23, 59, 59, 999);
             const exp = Math.floor(end / 1000) + 1;
+
+            let isBuy=0;
 
             // calculate buy sell
             let sell, receive;
@@ -212,7 +214,9 @@ class CybexSigner {
             };
             if (side === "buy") {
                 sell = quote;
-                receive = base
+                receive = base;
+
+                isBuy = 1;
             } else {
                 sell = base;
                 receive = quote
@@ -228,6 +232,7 @@ class CybexSigner {
                     "amount": 55,
                     "asset_id": this.fee_asset_id
                 },
+                "isBuy": isBuy
             };
 
             return this.op_sign("limit_order_create", obj);
@@ -239,7 +244,7 @@ class CybexSigner {
 
     limit_order_cancel(trx_id) {
         if(!this.has_crendential) {
-            throw new Error("You need to provide credentials for signing")
+            throw new Error("You need to provide valid credentials for signing")
         }
         try {
             let obj = {
@@ -262,7 +267,7 @@ class CybexSigner {
 
     cancel_all(pair) {
         if(!this.has_crendential) {
-            throw new Error("You need to provide credentials for signing")
+            throw new Error("You need to provide valid credentials for signing")
         }
         if(typeof pair === 'string'){
             pair = this.get_pair(pair)
@@ -293,26 +298,16 @@ class Cybex {
 
         //accountName = undefined, account = undefined, key = undefined, environ = "prod", verbose=true
         this.apiEndPoint = "https://api.cybex.io/v1/";
-        this.verbose= true;
 
-        if(config){
-            if(config.environ && config.environ==='uat'){
-                this.apiEndPoint = "https://apitest.cybex.io/v1/";
-            }
-            if(config.verbose){
-                this.verbose = config.verbose;
-            }
-            if(config.enableRateLimit){
-                this.enableRateLimit = config.enableRateLimit;
-            }
-            if(config.accountName){
-                this.accountName = this.accountName;
-            }
+        if(config && config.environ && config.environ==='uat'){
+            this.apiEndPoint = "https://apitest.cybex.io/v1/";
         }
-        // this.config = {account:account, key:key, accountName:accountName};
+        if(config && config.accountName){
+            this.accountName = config.accountName
+        }
+        this.config = config;
     }
-
-
+    
     executeRestRequest(url, method = 'GET', data = undefined) {
         if(this.verbose&&data){
             console.log(data);
@@ -324,7 +319,7 @@ class Cybex {
             .then(res => res.json());
     }
     async setSigner(config){
-        this.verbose = config?config.verbose:this.verbose;
+        this.verbose = config?config.verbose:this.verbose?this.verbose:true;
         this.enableRateLimit = config?config.enableRateLimit:this.enableRateLimit;
 
         if(!config.account && config.accountName){
@@ -335,7 +330,6 @@ class Cybex {
             if(res.result.length&&res.result[0].length>1){
                 config.account = res.result[0][1]
             }
-
         }
 
         if(!config.key && config.accountName && config.password){
@@ -343,7 +337,10 @@ class Cybex {
             config.key = genedKey.toWif()
         }
 
-        return await this.signer.set_credential(config.account, config.key);
+        if(config.account&&config.key){
+            return await this.signer.set_credential(config.account, config.key);
+        }
+
     }
 
     async get_pair(assetPair) {
@@ -408,9 +405,9 @@ class Cybex {
         return await this.executeRestRequest(url)
     }
 
-    async fetchOHLCV(assetPair, interval="1h") {
+    async fetchOHLCV(assetPair, interval="1h", limit=10) {
 
-        const url = this.apiEndPoint + "klines?assetPair="+assetPair+"&interval="+interval;
+        const url = this.apiEndPoint + "klines?assetPair="+assetPair+"&interval="+interval+"&limit="+10;
         return await this.executeRestRequest(url)
 
     }
@@ -440,7 +437,7 @@ class Cybex {
 
     async createOrder(assetPair, side, amount, price) {
 
-        if(this.signer){
+        if(this.signer.has_crendential){
             if(!this.loaded){
                 const res = await this.loadMarkets()
             }
@@ -489,7 +486,7 @@ class Cybex {
     }
 
     async cancelOrder(trx_id) {
-        if(this.signer){
+        if(this.signer.has_crendential){
 
             if(!this.loaded){
                 const res = await this.loadMarkets()
@@ -504,7 +501,7 @@ class Cybex {
     }
 
     async cancelAll(assetPair) {
-        if(this.signer){
+        if(this.signer.has_crendential){
             if(!this.loaded){
                 const res = await this.loadMarkets()
             }

@@ -53,7 +53,7 @@ Fetches a list of all available markets from an exchange and returns an array of
 Returns the list of markets as an object indexed by assetPair and caches it with the exchange instance. Returns cached markets if loaded already, unless the reload = true flag is forced.
 
 **fetchOrderBook (assetPair[, limit = undefined[, params = {}]]):** 
-Fetch L2/L3 order book for a particular market trading assetPair.
+Fetch order book for a particular market trading assetPair.
 
 **fetchTrades (assetPair[, since[, [limit, [params]]]]):**
 Fetch recent trades for a particular trading assetPair.
