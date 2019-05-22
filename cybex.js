@@ -27,13 +27,13 @@ class CybexSigner {
         this.has_crendential = false;
     }
 
-    executeRestRequest(url, method = 'GET', data = undefined) {
-        return fetch(url, {method: method, body: JSON.stringify(data), headers: {'Content-type': 'application/json'}})
-            .catch(error => {
-                console.log(error);
-            })
-            .then(res => res.json());
-    }
+    // executeRestRequest(url, method = 'GET', data = undefined) {
+    //     return fetch(url, {method: method, body: JSON.stringify(data), headers: {'Content-type': 'application/json'}})
+    //         .catch(error => {
+    //             console.log(error);
+    //         })
+    //         .then(res => res.json());
+    // }
 
     set_chain_params(chain_id, ref_block_id, availableAssets, availableAssetPairs) {
         this.chain_id = chain_id ? chain_id : "90be01e82b981c8f201c9a78a3d31f655743b29ff3274727b1439b093d04aa23";
@@ -277,11 +277,11 @@ class CybexSigner {
             let obj = {
                 "seller": this.user.id,
                 "fee": {
-                    "amount": 5,
+                    "amount": 50,
                     "asset_id": this.fee_asset_id
                 },
-                "sell_asset_id": pair.quote.assetId,
-                "receive_asset_id": pair.base.assetId
+                "sell_asset_id": pair.base.assetId,
+                "receive_asset_id": pair.quote.assetId
             }
             return this.op_sign("cancel_all", obj)
 
@@ -312,8 +312,7 @@ class Cybex {
     }
 
     executeRestRequest(url, method = 'GET', data = undefined) {
-        console.log(url);
-        console.log(data);
+
         if (this.verbose && data) {
             console.log(data);
         }
