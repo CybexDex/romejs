@@ -36,9 +36,10 @@ class CybexSigner {
     // }
 
     set_chain_params(chain_id, ref_block_id, availableAssets, availableAssetPairs) {
-        this.chain_id = chain_id ? chain_id : "90be01e82b981c8f201c9a78a3d31f655743b29ff3274727b1439b093d04aa23";
-        const ref_block = ref_block_id ? ref_block_id : "00b803c9b121dbb369d17cf68d125884f22a0190";
-        this.params = block_params(ref_block);
+        this.chain_id = chain_id ? chain_id : this.chain_id;
+        if (ref_block_id) {
+            this.params = block_params(ref_block_id);
+        }
 
         this.availableAssets = availableAssets;
         this.availableAssetPairs = availableAssetPairs;
@@ -296,14 +297,14 @@ class Cybex {
         this.loaded = false;
         this.apiEndPoint = "https://api.cybex.io/v1/";
         this.chainEndPoint = "https://hongkong.cybex.io/";
-        this.verbose=true;
+        this.verbose = true;
         this.signer = new CybexSigner();
         this.config = config;
 
         this.setEnviron(config);
     }
 
-    setEnviron(config){
+    setEnviron(config) {
 
         if (config && config.environ && config.environ === 'uat') {
             this.apiEndPoint = "https://apitest.cybex.io/v1/";
@@ -362,7 +363,7 @@ class Cybex {
                     console.log("private key is not valid")
                 }
             }
-        }else{
+        } else {
             console.log("account is not valid")
         }
     }
