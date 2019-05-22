@@ -44,10 +44,14 @@ class CybexSigner {
         this.availableAssetPairs = availableAssetPairs;
     }
 
-    async set_credential(account, key){
+    async set_credential(account, key, uat=false){
 
         if(account && key){
             const privateKey = PrivateKey.fromWif(key);
+            if(uat){
+                return this.set_valid_crendential(account, privateKey);
+            }
+
             const data = {"method":"call","params":[0,"get_objects",[[account]]],"id":2};
             const _Res = await this.executeRestRequest("https://apihk.cybex.io/", "POST", data);
             const pubKeyRes = _Res.result[0];
@@ -301,6 +305,7 @@ class Cybex {
 
         if(config && config.environ && config.environ==='uat'){
             this.apiEndPoint = "https://apitest.cybex.io/v1/";
+            this.uat=true;
         }
         if(config && config.accountName){
             this.accountName = config.accountName
@@ -322,6 +327,11 @@ class Cybex {
         this.verbose = config?config.verbose:this.verbose?this.verbose:true;
         this.enableRateLimit = config?config.enableRateLimit:this.enableRateLimit;
 
+        if(config && config.environ && config.environ==='uat'){
+            this.apiEndPoint = "https://apitest.cybex.io/v1/";
+            this.uat=true;
+        }
+
         if(!config.account && config.accountName){
             const data = {"method": "call", "params": [0, "lookup_accounts",[config.accountName, 50]], "id": 1};
             const prod_chain_endpoint = "https://hongkong.cybex.io/";
@@ -338,7 +348,9 @@ class Cybex {
         }
 
         if(config.account&&config.key){
-            return await this.signer.set_credential(config.account, config.key);
+            return await this.signer.set_credential(config.account, config.key, this.uat);
+        }else{
+            throw new Error("no valid credentials")
         }
 
     }
