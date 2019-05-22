@@ -348,9 +348,13 @@ class Cybex {
         }
 
         if(config.account&&config.key){
-            return await this.signer.set_credential(config.account, config.key, this.uat);
-        }else{
-            throw new Error("no valid credentials")
+            const result =  await this.signer.set_credential(config.account, config.key, this.uat);
+            if (!this.signer.has_crendential){
+                console.log("private key is not valid")
+            }
+        }
+        else{
+            console.log("account or/and private key is not valid")
         }
 
     }
