@@ -52,7 +52,7 @@ Fetches a list of all available markets from an exchange and returns an array of
 **loadMarkets ([reload]):**
 Returns the list of markets as an object indexed by assetPair and caches it with the exchange instance. Returns cached markets if loaded already, unless the reload = true flag is forced.
 
-**fetchOrderBook (assetPair[, limit = undefined[, params = {}]]):** 
+**fetchOrderBook (assetPair[, limit = undefined]):** 
 Fetch order book for a particular market trading assetPair.
 
 **fetchTrades (assetPair[, since[, [limit, [params]]]]):**
@@ -66,19 +66,19 @@ Fetch OHLCV(Kline) information of given assetPair and interval.
 **fetchBalance (accountName)** 
 Fetch Balance of the given accountName.
 
-**fetchOrder (transactionId[, accountName[, params]])**
+**fetchOrder (transactionId[, accountName])**
 Fetch the order details of a given transactionId of the given accountName.
 
-**fetchOrders ([assetPair[, accountName[, limit[, params]]]])**
+**fetchOrders ([assetPair[, accountName[, limit]]])**
 Fetch all orders of an assetPair of the given accountName
 
-**fetchOpenOrders ([assetPair[, accountName, params]]]])**
+**fetchOpenOrders ([assetPair[, accountName]]]])**
 Fetch all open orders of an assetPair of the given accountName
 
-**fetchClosedOrders ([assetPair[, accountName[, params]]])**
+**fetchClosedOrders ([assetPair[, accountName]])**
 Fetch all closed orders of an assetPair of the given accountName
 
-**fetchMyTrades ([assetPair[, accountName[, limit[, params]]]])**
+**fetchMyTrades ([assetPair[, accountName[, limit]]])**
 Fetch all trades of an assetPair of the given accountName
 
 ### Order Execution
@@ -86,20 +86,20 @@ Fetch all trades of an assetPair of the given accountName
 **createOrder(assetPair, side, amount, price)**
 Create order with given params
 
-**createLimitBuyOrder (assetPair, amount, price[, params])**
+**createLimitBuyOrder (assetPair, amount, price)**
 Create limit buy order with given params
 
-**createLimitSellOrder (assetPair, amount, price[, params])**
+**createLimitSellOrder (assetPair, amount, price)**
 Create limit sell order with given params
 
-**createMarketBuyOrder (assetPair, amount[, params])**
+**createMarketBuyOrder (assetPair, amount)**
 Create limit buy order with given params and best ask price
 
-**createMarketSellOrder (assetPair, amount[, params])**
+**createMarketSellOrder (assetPair, amount)**
 Create limit sell order with given params and best bid price
 
-**cancelOrder (transactionId[, params])**
+**cancelOrder (transactionId)**
 Cancel order with transactionId
 
-**cancelAll(assetPair[, params])**
+**cancelAll(assetPair)**
 Cancel all orders
