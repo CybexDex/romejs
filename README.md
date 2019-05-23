@@ -25,10 +25,8 @@ const Cybex = require('romejs');
     const pubTrades = await cybex.fetchTrades(assetPair, true, 5);
     console.log(pubTrades);
     
- 
     const r = await cybex.setSigner({accountName:"accountName", "password":"password"});
-    // accountName is always necessary
-    // const r = await cybex.setSigner({accountName:"accountName", account:"1.2.xxxxx", "key":"private_key"});
+    // const r = await cybex.setSigner({account:"1.2.xxxxx", "key":"private_key"});
     const res= cybex.createMarketBuyOrder(assetPair, 0.01);
     console.log(res);
     
@@ -83,13 +81,15 @@ Fetch all trades of an assetPair of the given accountName
 
 ### Order Execution
 
-**createOrder(assetPair, side, amount, price)**
+The following methods require account and private key configured. 
+
+**createOrder(assetPair, side, amount, price, fill_or_kill)**
 Create order with given params
 
-**createLimitBuyOrder (assetPair, amount, price)**
+**createLimitBuyOrder (assetPair, amount, price, fill_or_kill)**
 Create limit buy order with given params
 
-**createLimitSellOrder (assetPair, amount, price)**
+**createLimitSellOrder (assetPair, amount, price, fill_or_kill)**
 Create limit sell order with given params
 
 **createMarketBuyOrder (assetPair, amount)**

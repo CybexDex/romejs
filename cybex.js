@@ -180,7 +180,7 @@ class CybexSigner {
     //     return
     // }
 
-    limit_order_create(pair, side, price, amount, total = null) {
+    limit_order_create(pair, side, price, amount, total, fill_or_kill = false) {
         // console.log(side, "price:",price,"amount", amount);
 
         if (!this.has_crendential) {
@@ -229,7 +229,7 @@ class CybexSigner {
                 "amount_to_sell": sell,
                 "min_to_receive": receive,
                 "expiration": exp,
-                "fill_or_kill": false,
+                "fill_or_kill": fill_or_kill,
                 "fee": {
                     "amount": 55,
                     "asset_id": this.fee_asset_id
@@ -460,7 +460,7 @@ class Cybex {
 
     }
 
-    async createOrder(assetPair, side, amount, price) {
+    async createOrder(assetPair, side, amount, price, fill_or_kill = false) {
 
         if (this.signer.has_crendential) {
             if (!this.loaded) {
@@ -478,7 +478,7 @@ class Cybex {
                 console.log("Mininum minTickSize is " + parsed.minQuantity);
                 return
             }
-            const signedTx = this.signer.limit_order_create(parsed, side, price, amount, total);
+            const signedTx = this.signer.limit_order_create(parsed, side, price, amount, total, fill_or_kill);
 
             const url = this.apiEndPoint + "transaction";
 
@@ -489,13 +489,13 @@ class Cybex {
         }
     }
 
-    async createLimitBuyOrder(assetPair, amount, price) {
-        return this.createOrder(assetPair, "buy", amount, price);
+    async createLimitBuyOrder(assetPair, amount, price, fill_or_kill = false) {
+        return this.createOrder(assetPair, "buy", amount, price, fill_or_kill);
     }
 
-    async createLimitSellOrder(assetPair, amount, price) {
+    async createLimitSellOrder(assetPair, amount, price, fill_or_kill = false) {
 
-        return this.createOrder(assetPair, "sell", amount, price);
+        return this.createOrder(assetPair, "sell", amount, price, fill_or_kill);
     }
 
     async createMarketBuyOrder(assetPair, amount) {
