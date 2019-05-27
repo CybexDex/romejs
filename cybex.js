@@ -134,7 +134,7 @@ class CybexSigner {
                 expiration: obj.expiration,
                 signature: sig,
                 fill_or_kill: obj.fill_or_kill ? 1 : 0,
-                isBuy: isBuy
+                isBuy: 0//isBuy
             };
 
         } else if (type_name === "limit_order_cancel") {

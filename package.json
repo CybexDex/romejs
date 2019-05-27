@@ -1,6 +1,6 @@
 {
   "name": "romejs",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "main": "cybex.js",
   "dependencies": {
     "fetch-ponyfill": "4.1.0",
