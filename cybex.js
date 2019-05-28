@@ -432,7 +432,7 @@ class Cybex {
 
     async fetchOHLCV(assetPair, interval = "1h", limit = 10) {
 
-        const url = this.apiEndPoint + "klines?assetPair=" + assetPair + "&interval=" + interval + "&limit=" + 10;
+        const url = this.apiEndPoint + "klines?assetPair=" + assetPair + "&interval=" + interval + "&limit=" + limit;
         return await this.executeRestRequest(url)
 
     }
@@ -466,25 +466,38 @@ class Cybex {
                 const res = await this.loadMarkets()
             }
 
-            const parsed = await this.get_pair(assetPair);
-            const total = amount * price;
+            if(amount && price){
+                try{
+                    amount = parseFloat(amount).toFixed(2);
+                    price = parseFloat(price);
 
-            if (parsed.minQuantity && (amount < parsed.minQuantity)) {
-                console.log("Mininum quantity is " + parsed.minQuantity);
-                return
+                    const parsed = await this.get_pair(assetPair);
+                    const total = amount * price;
+
+                    if (parsed.minQuantity && (amount < parsed.minQuantity)) {
+                        console.log("Mininum quantity is " + parsed.minQuantity);
+                        return
+                    }
+                    if (parsed.minTickSize && (total < parsed.minTickSize)) {
+                        console.log("Mininum minTickSize is " + parsed.minQuantity);
+                        return
+                    }
+                    const signedTx = this.signer.limit_order_create(parsed, side, price, amount, total, fill_or_kill);
+
+                    const url = this.apiEndPoint + "transaction";
+
+                    const res = await this.executeRestRequest(url, "POST", signedTx);
+
+                    res.transactionId = signedTx.transactionId;
+                    return res;
+
+                }catch (e) {
+                    console.error(e)
+                }
+
+            }else{
+                console.error("amount or price invalid!")
             }
-            if (parsed.minTickSize && (total < parsed.minTickSize)) {
-                console.log("Mininum minTickSize is " + parsed.minQuantity);
-                return
-            }
-            const signedTx = this.signer.limit_order_create(parsed, side, price, amount, total, fill_or_kill);
-
-            const url = this.apiEndPoint + "transaction";
-
-            const res = await this.executeRestRequest(url, "POST", signedTx);
-
-            res.transactionId = signedTx.transactionId;
-            return res;
         }
     }
 
