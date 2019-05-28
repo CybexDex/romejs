@@ -437,8 +437,8 @@ class Cybex {
 
     }
 
-    async fetchTrades(assetPair, reverse = true, limit = 10) {
-        const url = this.apiEndPoint + "trade?assetPair=" + assetPair + "&reverse=" + reverse + "&limit=" + limit;
+    async fetchTrades(assetPair, limit=10) {
+        const url = this.apiEndPoint + "recentTrade?assetPair=" + assetPair + "&limit=" + limit;
         return await this.executeRestRequest(url)
     }
 
@@ -451,7 +451,6 @@ class Cybex {
             return await this.executeRestRequest(url)
         }
         return [];
-
     }
 
     async fetchBestPrice(assetPair) {
