@@ -134,7 +134,7 @@ class CybexSigner {
                 expiration: obj.expiration,
                 signature: sig,
                 fill_or_kill: obj.fill_or_kill ? 1 : 0,
-                isBuy: 0//isBuy
+                isBuy: isBuy
             };
 
         } else if (type_name === "limit_order_cancel") {
@@ -198,7 +198,7 @@ class CybexSigner {
             const exp = Math.floor(end / 1000) + 1;
 
             let isBuy = 0;
-
+            let buyExtentions = [];
             // calculate buy sell
             let sell, receive;
             let base_amount = parseInt(amount * Math.pow(10, pair.base.precision));//this.assetAmountRaw(quote_id, amount)
@@ -219,6 +219,7 @@ class CybexSigner {
                 receive = base;
 
                 isBuy = 1;
+                buyExtentions = [[7, {"is_buy": true}]]
             } else {
                 sell = base;
                 receive = quote
@@ -233,7 +234,8 @@ class CybexSigner {
                 "fee": {
                     "amount": 55,
                     "asset_id": this.fee_asset_id
-                }
+                },
+                "extensions": buyExtentions
             };
 
             return this.op_sign("limit_order_create", obj, undefined, isBuy);
@@ -475,11 +477,11 @@ class Cybex {
                     const total = amount * price;
 
                     if (parsed.minQuantity && (amount < parsed.minQuantity)) {
-                        console.log("Mininum quantity is " + parsed.minQuantity);
+                        console.error("Minimum quantity is " + parsed.minQuantity);
                         return
                     }
                     if (parsed.minTickSize && (total < parsed.minTickSize)) {
-                        console.log("Mininum minTickSize is " + parsed.minQuantity);
+                        console.error("Minimum minTickSize is " + parsed.minQuantity);
                         return
                     }
                     const signedTx = this.signer.limit_order_create(parsed, side, price, amount, total, fill_or_kill);

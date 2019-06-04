@@ -87,6 +87,10 @@ var cancel_by_transaction_id = new Serializer("cancel_by_transaction_id", {
     trx_id: bytes(40)
 });
 
+var buy_order_extention = new Serializer("buy_order_extention", {
+    is_buy: bool
+});
+
 var future_extensions = static_variant([
     void_ext,
     cybex_ext_vesting,
@@ -94,7 +98,8 @@ var future_extensions = static_variant([
     cybex_ext_transfer_vesting,
     cybex_ext_xfer_to_name,
     cybex_ext_xfer_to_many,
-    cancel_by_transaction_id
+    cancel_by_transaction_id,
+    buy_order_extention
 ]);
 
 // Custom-types follow Generated code:
